@@ -552,7 +552,11 @@ function renderMateriais(c, isAdmin) {
             if (!file) return;
             const eid = inp.dataset.encid;
             try {
-              const path = `enc_${eid}/${Date.now()}_${file.name}`;
+              const safeName = file.name
+  .normalize('NFD')
+  .replace(/[\u0300-\u036f]/g, '')
+  .replace(/[^a-zA-Z0-9._-]/g, '_');
+const path = `enc_${eid}/${Date.now()}_${safeName}`;
               const { error: ue } = await sb.storage.from('materiais').upload(path, file);
               if (ue) throw ue;
               const { data: { publicUrl } } = sb.storage.from('materiais').getPublicUrl(path);
