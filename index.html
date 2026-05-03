@@ -9,15 +9,10 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
-<!-- ═══════════════════════════════════════════════════════════
-     ⚙️  CONFIGURAÇÃO — preencha com suas chaves do Supabase
-     Supabase → Project Settings → API
-     ═══════════════════════════════════════════════════════════ -->
 <script>
-  const SUPABASE_URL  = 'https://llfhvvtbjzlpbarteosr.supabase.co';       // ex: https://xyzabc.supabase.co
-  const SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxsZmh2dnRianpscGJhcnRlb3NyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY2MjM5NDcsImV4cCI6MjA5MjE5OTk0N30.b_erw9vY7Cg8ajbnoOZgKGtDIcmmE3_4yJSUKVKup7E';  // a chave "anon public"
+  const SUPABASE_URL  = 'https://llfhvvtbjzlpbarteosr.supabase.co';
+  const SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxsZmh2dnRianpscGJhcnRlb3NyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY2MjM5NDcsImV4cCI6MjA5MjE5OTk0N30.b_erw9vY7Cg8ajbnoOZgKGtDIcmmE3_4yJSUKVKup7E';
 </script>
-<!-- ═══════════════════════════════════════════════════════════ -->
 
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -35,46 +30,37 @@
 html{font-size:15px}
 body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh;-webkit-font-smoothing:antialiased}
 
-/* util */
 .hide{display:none!important}
 .page{padding:1.5rem;max-width:860px;margin:0 auto}
 .gap{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
 .spacer{flex:1}
 
-/* loading */
 #loading{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem}
 .spin{font-size:32px;color:var(--accent);animation:pulse 1.4s ease-in-out infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 
-/* setup screen */
 #setup{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem}
 .setup-card{background:var(--card);border:1px solid var(--border);border-radius:var(--rl);padding:2.5rem;max-width:500px;width:100%;box-shadow:var(--sh)}
 .setup-card h2{font-family:'Lora',serif;font-size:20px;font-weight:500;margin-bottom:0.5rem}
 .setup-card p{font-size:13px;color:var(--text2);margin-bottom:1.5rem;line-height:1.6}
-.code-block{background:var(--muted);border:1px solid var(--border);border-radius:var(--rs);padding:0.75rem 1rem;font-family:monospace;font-size:12px;color:var(--text);margin-bottom:1.5rem;line-height:1.8;word-break:break-all}
-.code-block b{color:var(--accent)}
 
-/* topbar */
 #topbar{background:var(--card);border-bottom:1px solid var(--border);height:54px;display:flex;align-items:center;padding:0 1.5rem;gap:12px;position:sticky;top:0;z-index:200}
 .brand{font-family:'Lora',serif;font-size:17px;font-weight:500}
 .tbadge{font-size:11px;font-weight:500;background:var(--al);color:var(--accent);padding:2px 9px;border-radius:20px}
 .tuser{font-size:13px;color:var(--text2);margin-left:auto}
 
-/* nav */
-#nav{background:var(--card);border-bottom:1px solid var(--border);display:flex;overflow-x:auto;padding:0 1rem;scrollbar-width:none}
-#nav::-webkit-scrollbar{display:none}
+#nav-pub,#nav-adm{background:var(--card);border-bottom:1px solid var(--border);display:flex;overflow-x:auto;padding:0 1rem;scrollbar-width:none}
+#nav-pub::-webkit-scrollbar,#nav-adm::-webkit-scrollbar{display:none}
 .ntab{padding:14px 14px;border:none;border-bottom:2px solid transparent;background:transparent;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--text2);cursor:pointer;white-space:nowrap;transition:.15s}
 .ntab.active{color:var(--accent);border-bottom-color:var(--accent);font-weight:500}
 .ntab:hover:not(.active){color:var(--text)}
 #nav-admin-btn{margin-left:auto;color:var(--text3)!important}
 
-/* hero */
 .hero{background:var(--accent);color:#fff;padding:2.5rem 1.5rem 2rem;text-align:center;position:relative;overflow:hidden}
 .hero::before{content:'✝';position:absolute;font-size:160px;opacity:.05;top:-10px;right:-10px;line-height:1}
 .hero h1{font-family:'Lora',serif;font-size:26px;font-weight:400;margin-bottom:.4rem}
 .hero p{font-size:14px;opacity:.75}
 
-/* login */
 #login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem}
 .login-card{background:var(--card);border:1px solid var(--border);border-radius:var(--rl);padding:2.5rem;max-width:360px;width:100%;box-shadow:var(--sh)}
 .login-logo{text-align:center;margin-bottom:2rem}
@@ -82,21 +68,16 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(-
 .login-logo h2{font-family:'Lora',serif;font-size:19px;font-weight:500}
 .login-logo p{font-size:13px;color:var(--text2);margin-top:3px}
 
-/* cards / stats */
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:1.25rem}
 .stat{background:var(--muted);border-radius:var(--r);padding:.9rem 1rem}
 .stat-l{font-size:11px;font-weight:500;color:var(--text3);letter-spacing:.5px;text-transform:uppercase;margin-bottom:3px}
 .stat-v{font-size:24px;font-weight:500;line-height:1}
 .stat-s{font-size:12px;color:var(--text2);margin-top:2px}
 
-/* card box */
 .box{background:var(--card);border:1px solid var(--border);border-radius:var(--rl);padding:1.25rem;box-shadow:var(--sh)}
-
-/* section header */
 .sh{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
 .sh-t{font-family:'Lora',serif;font-size:16px;font-weight:500}
 
-/* buttons */
 .btn{display:inline-flex;align-items:center;gap:5px;padding:7px 13px;border-radius:var(--rs);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;border:1px solid transparent;text-decoration:none;transition:.15s}
 .btn-acc{background:var(--accent);color:#fff;border-color:var(--accent)}
 .btn-acc:hover{background:var(--ad)}
@@ -108,15 +89,14 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(-
 .btn-danger{background:var(--redl);color:var(--red);border-color:#F0B3B3}
 .btn-danger:hover{background:#F7C1C1}
 .btn-full{width:100%;justify-content:center;padding:10px}
+.btn-icon{padding:5px 8px;font-size:13px}
 
-/* form */
 .fg{margin-bottom:1rem}
 .fl{display:block;font-size:12px;font-weight:500;color:var(--text2);margin-bottom:5px}
 .fi{width:100%;padding:9px 11px;border:1px solid var(--border);border-radius:var(--rs);font-family:'DM Sans',sans-serif;font-size:14px;background:var(--card);color:var(--text);outline:none;transition:.15s}
 .fi:focus{border-color:var(--accent)}
 select.fi{cursor:pointer}
 
-/* badges */
 .badge{display:inline-flex;align-items:center;font-size:11px;font-weight:500;padding:2px 8px;border-radius:20px;white-space:nowrap}
 .bg-green{background:var(--gl);color:var(--green)}
 .bg-gray{background:var(--muted);color:var(--text2)}
@@ -124,12 +104,11 @@ select.fi{cursor:pointer}
 .bg-amber{background:var(--ambl);color:var(--amber)}
 .bg-red{background:var(--redl);color:var(--red)}
 
-/* notif */
 .notif{border-radius:var(--rs);padding:9px 13px;font-size:13px;margin-bottom:1rem}
 .notif-ok{background:var(--gl);color:var(--green);border:1px solid #C0DD97}
 .notif-err{background:var(--redl);color:var(--red);border:1px solid #F0B3B3}
 
-/* modulo accordion */
+/* módulos */
 .mod-card{background:var(--card);border:1px solid var(--border);border-radius:var(--rl);margin-bottom:10px;overflow:hidden;box-shadow:var(--sh)}
 .mod-head{display:flex;align-items:center;gap:12px;padding:1rem 1.25rem;cursor:pointer;user-select:none;transition:.15s}
 .mod-head:hover{background:var(--muted)}
@@ -149,48 +128,69 @@ select.fi{cursor:pointer}
 .mat-name{flex:1;font-size:13px}
 .mat-sz{font-size:11px;color:var(--text3)}
 
+/* admin — módulos/encontros */
+.adm-mod-card{background:var(--card);border:1px solid var(--border);border-radius:var(--rl);margin-bottom:10px;overflow:hidden;box-shadow:var(--sh)}
+.adm-mod-head{display:flex;align-items:center;gap:10px;padding:.85rem 1.25rem;background:var(--al);cursor:pointer;transition:.15s}
+.adm-mod-head:hover{background:#dddaf5}
+.adm-mod-title{font-size:14px;font-weight:500;flex:1;color:var(--accent)}
+.adm-enc-row{display:flex;align-items:center;gap:10px;padding:.6rem 1.25rem;border-bottom:1px solid var(--border)}
+.adm-enc-row:last-child{border-bottom:none}
+.adm-enc-name{flex:1;font-size:13px}
+.adm-add-enc{display:flex;align-items:center;gap:8px;padding:.6rem 1.25rem;background:var(--muted)}
+.adm-actions{display:flex;gap:6px;align-items:center}
+
 /* presença */
 .pres-list{display:flex;flex-direction:column;gap:8px}
 .pres-row{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:10px 14px}
 .av{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;flex-shrink:0}
 .pname{flex:1;font-size:14px;font-weight:500}
 .pfreq{font-size:11px;color:var(--text3)}
-.tog{padding:5px 13px;border-radius:20px;border:1px solid;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;cursor:pointer;transition:.15s}
+.tog{padding:5px 13px;border-radius:20px;border:1px solid;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;cursor:pointer;transition:.15s;min-width:76px;text-align:center}
 .tog-p{background:var(--gl);color:var(--green);border-color:#C0DD97}
 .tog-a{background:var(--muted);color:var(--text2);border-color:var(--border2)}
 
-/* freq bar */
+/* chamada — seletor flat de encontros */
+.enc-sel-list{display:flex;flex-direction:column;gap:4px;margin-bottom:1.25rem}
+.enc-sel-group-label{font-size:11px;font-weight:500;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;padding:8px 0 4px}
+.enc-sel-btn{display:flex;align-items:center;gap:10px;padding:9px 14px;border-radius:var(--r);border:1px solid var(--border);background:var(--card);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;text-align:left;transition:.15s;width:100%}
+.enc-sel-btn:hover{background:var(--muted)}
+.enc-sel-btn.active{background:var(--al);border-color:var(--accent);color:var(--accent);font-weight:500}
+.enc-sel-btn .enc-sel-n{width:26px;height:26px;border-radius:6px;background:var(--muted);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0}
+.enc-sel-btn.active .enc-sel-n{background:var(--accent);color:#fff}
+
+/* barras freq */
 .fb-row{display:flex;align-items:center;gap:10px;margin-bottom:9px}
 .fb-name{font-size:13px;width:90px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .fb-track{flex:1;height:6px;background:var(--muted);border-radius:3px;overflow:hidden}
 .fb-fill{height:100%;border-radius:3px;transition:width .5s}
 .fb-pct{font-size:12px;color:var(--text2);width:34px;text-align:right}
 
-/* disc table */
 .dt{width:100%;border-collapse:collapse;font-size:13px}
 .dt th{text-align:left;padding:8px 12px;border-bottom:1px solid var(--border);font-size:11px;font-weight:500;color:var(--text3);text-transform:uppercase;letter-spacing:.5px}
 .dt td{padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:middle}
 .dt tr:last-child td{border-bottom:none}
 .dt tr:hover td{background:var(--muted)}
 
-/* modal */
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;z-index:500;padding:1rem}
 .modal{background:var(--card);border-radius:var(--rl);padding:1.5rem;width:100%;max-width:420px;box-shadow:0 8px 32px rgba(0,0,0,.15);animation:sup .2s ease}
 @keyframes sup{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
 .modal-t{font-family:'Lora',serif;font-size:17px;font-weight:500;margin-bottom:1.25rem}
 .modal-f{display:flex;gap:8px;justify-content:flex-end;margin-top:1.25rem}
 
-/* empty */
 .empty{text-align:center;padding:3rem 1rem;color:var(--text2);font-size:14px}
 .empty-i{font-size:32px;margin-bottom:.75rem;opacity:.4}
 
-/* export cards */
 .exp-card{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;margin-bottom:10px}
 .exp-info h3{font-size:14px;font-weight:500;margin-bottom:3px}
 .exp-info p{font-size:13px;color:var(--text2)}
 
+/* layout chamada dois painéis */
+.chamada-layout{display:grid;grid-template-columns:260px 1fr;gap:1rem;align-items:start}
+@media(max-width:640px){.chamada-layout{grid-template-columns:1fr}}
+.chamada-sidebar{position:sticky;top:70px}
+
 @media(max-width:520px){
-  .topbar,.page{padding-left:1rem;padding-right:1rem}
+  .page{padding-left:1rem;padding-right:1rem}
   .hero{padding:2rem 1rem 1.5rem}
   .hero h1{font-size:22px}
 }
@@ -198,26 +198,19 @@ select.fi{cursor:pointer}
 </head>
 <body>
 
-<!-- LOADING -->
 <div id="loading"><div class="spin">✝</div><p style="color:var(--text2)">Carregando...</p></div>
 
-<!-- SETUP (quando as chaves não foram preenchidas) -->
 <div id="setup" class="hide">
   <div class="setup-card">
     <h2>Configure suas chaves do Supabase</h2>
-    <p>Abra este arquivo HTML em um editor de texto (ex: Bloco de Notas) e preencha as duas linhas no topo do arquivo:</p>
-    <div class="code-block">const SUPABASE_URL = '<b>COLE_SUA_URL_AQUI</b>';<br>const SUPABASE_KEY = '<b>COLE_SUA_ANON_KEY_AQUI</b>';</div>
-    <p>Onde encontrar:<br>
-    → Acesse <b>supabase.com</b> → seu projeto<br>
-    → <b>Project Settings → API</b><br>
-    → Copie a <b>Project URL</b> e a chave <b>anon public</b></p>
-    <div style="margin-top:1.5rem">
-      <p style="font-size:12px;color:var(--text3)">Depois de preencher, salve o arquivo e abra novamente no navegador.</p>
+    <p>Abra este arquivo HTML em um editor de texto e preencha as duas linhas no topo:</p>
+    <div style="background:var(--muted);border:1px solid var(--border);border-radius:var(--rs);padding:.75rem 1rem;font-family:monospace;font-size:12px;margin-bottom:1.5rem;line-height:1.8">
+      const SUPABASE_URL = '<b style="color:var(--accent)">COLE_SUA_URL</b>';<br>
+      const SUPABASE_KEY = '<b style="color:var(--accent)">COLE_SUA_KEY</b>';
     </div>
   </div>
 </div>
 
-<!-- LOGIN ADMIN -->
 <div id="login-screen" class="hide">
   <div class="login-card">
     <div class="login-logo">
@@ -242,7 +235,6 @@ select.fi{cursor:pointer}
   </div>
 </div>
 
-<!-- APP PRINCIPAL -->
 <div id="app" class="hide">
   <div id="topbar">
     <span style="font-size:18px;color:var(--accent)">✝</span>
@@ -252,36 +244,24 @@ select.fi{cursor:pointer}
     <button class="btn btn-out btn-sm hide" id="btn-logout">Sair</button>
   </div>
 
-  <!-- NAV PÚBLICO -->
   <div id="nav-pub" class="hide">
-    <div id="nav">
-      <button class="ntab active" data-pub="materiais">Materiais</button>
-      <button class="ntab" data-pub="frequencia">Frequência</button>
-      <button class="ntab" id="nav-admin-btn">Discipulador ↗</button>
-    </div>
+    <button class="ntab active" data-pub="materiais">Materiais</button>
+    <button class="ntab" data-pub="frequencia">Frequência</button>
+    <button class="ntab" id="nav-admin-btn" style="margin-left:auto;color:var(--text3)">Discipulador ↗</button>
   </div>
 
-  <!-- NAV ADMIN -->
   <div id="nav-adm" class="hide">
-    <div id="nav2">
-      <button class="ntab active" data-adm="chamada">Chamada</button>
-      <button class="ntab" data-adm="relatorios">Relatórios</button>
-      <button class="ntab" data-adm="materiais-adm">Materiais</button>
-      <button class="ntab" data-adm="discipulandos">Discipulandos</button>
-    </div>
+    <button class="ntab active" data-adm="chamada">Chamada</button>
+    <button class="ntab" data-adm="relatorios">Relatórios</button>
+    <button class="ntab" data-adm="materiais-adm">Materiais</button>
+    <button class="ntab" data-adm="estrutura">Módulos & Encontros</button>
+    <button class="ntab" data-adm="discipulandos">Discipulandos</button>
   </div>
 
-  <!-- CONTEÚDO -->
   <div id="content"></div>
 </div>
 
-<!-- MODAL CONTAINER -->
-<div id="modal-wrap" class="hide"></div>
-
 <script>
-// ═══════════════════════════════════════
-// ESTADO GLOBAL
-// ═══════════════════════════════════════
 let sb, session = null;
 let modulos = [], discipulandos = [], chamadas = [];
 let viewAtual = '';
@@ -299,29 +279,17 @@ function av(nome, idx, sz=36) {
   return `<div class="av" style="width:${sz}px;height:${sz}px;background:${bg};color:${fg}">${ini}</div>`;
 }
 
-// ═══════════════════════════════════════
-// INIT
-// ═══════════════════════════════════════
+// ═══ INIT ═══
 window.addEventListener('DOMContentLoaded', async () => {
-  // Verifica se as chaves foram preenchidas
   if (!SUPABASE_URL || SUPABASE_URL.includes('COLE_SUA') ||
       !SUPABASE_KEY || SUPABASE_KEY.includes('COLE_SUA')) {
-    show('setup'); hide('loading');
-    return;
+    show('setup'); hide('loading'); return;
   }
-
   try {
     sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-    // Verifica sessão
     const { data } = await sb.auth.getSession();
     session = data.session;
-
-    sb.auth.onAuthStateChange((_e, s) => {
-      session = s;
-      renderApp();
-    });
-
+    sb.auth.onAuthStateChange((_e, s) => { session = s; renderApp(); });
     await carregarDados();
     hide('loading'); show('app');
     renderApp();
@@ -333,35 +301,30 @@ window.addEventListener('DOMContentLoaded', async () => {
   }
 });
 
-// ═══════════════════════════════════════
-// DADOS
-// ═══════════════════════════════════════
+// ═══ DADOS ═══
 async function carregarDados() {
   const [r1, r2, r3] = await Promise.all([
     sb.from('modulos').select('*, encontros(*, materiais(*))').order('numero'),
     sb.from('discipulandos').select('*').eq('ativo', true).order('nome'),
     sb.from('chamadas').select('*'),
   ]);
-  modulos      = r1.data || [];
+  modulos       = r1.data || [];
   discipulandos = r2.data || [];
-  chamadas     = r3.data || [];
-
-  // ordena encontros dentro de cada módulo
+  chamadas      = r3.data || [];
   modulos.forEach(m => {
     m.encontros = (m.encontros || []).sort((a,b) => a.numero - b.numero);
-    m.encontros.forEach(e => {
-      e.materiais = (e.materiais || []);
-    });
+    m.encontros.forEach(e => { e.materiais = e.materiais || []; });
   });
 }
 
-// ═══════════════════════════════════════
-// HELPERS
-// ═══════════════════════════════════════
+// ═══ HELPERS ═══
 function show(id){ document.getElementById(id)?.classList.remove('hide') }
 function hide(id){ document.getElementById(id)?.classList.add('hide') }
 function el(id){ return document.getElementById(id) }
-function todosEncontros(){ return modulos.flatMap(m => m.encontros.map(e => ({...e, mod_titulo: m.titulo, mod_numero: m.numero}))) }
+
+function todosEncontros(){
+  return modulos.flatMap(m => m.encontros.map(e => ({...e, mod_titulo:m.titulo, mod_numero:m.numero, mod_id:m.id})));
+}
 
 function getFreq(discId) {
   const enc = todosEncontros().filter(e => e.realizado);
@@ -385,26 +348,24 @@ function notif(msg, tipo='ok') {
   const n = document.createElement('div');
   n.className = `notif notif-${tipo}`;
   n.textContent = (tipo==='ok'?'✓ ':' ✗ ') + msg;
-  el('content').prepend(n);
+  const c = el('content');
+  c.insertBefore(n, c.firstChild);
   setTimeout(() => n.remove(), 3500);
 }
 
-// ═══════════════════════════════════════
-// RENDER APP
-// ═══════════════════════════════════════
+// ═══ APP ═══
 function renderApp() {
   hide('nav-pub'); hide('nav-adm');
   el('btn-logout').classList.add('hide');
 
   if (session) {
-    // Admin
     el('tb-badge').textContent = 'Admin';
     el('tb-badge').style.background = 'var(--gl)';
     el('tb-badge').style.color = 'var(--green)';
     el('tb-user').textContent = session.user.email;
     el('btn-logout').classList.remove('hide');
     show('nav-adm');
-    if (!['chamada','relatorios','materiais-adm','discipulandos'].includes(viewAtual)) viewAtual = 'chamada';
+    if (!['chamada','relatorios','materiais-adm','discipulandos','estrutura'].includes(viewAtual)) viewAtual = 'chamada';
     bindAdmNav();
     renderView(viewAtual);
   } else {
@@ -419,30 +380,31 @@ function renderApp() {
   }
 
   el('btn-logout').onclick = () => sb.auth.signOut();
-  el('nav-admin-btn') && (el('nav-admin-btn').onclick = () => {
-    hide('app'); show('login-screen');
-  });
+  const adminBtn = el('nav-admin-btn');
+  if (adminBtn) adminBtn.onclick = () => { hide('app'); show('login-screen'); };
 }
 
 function bindPubNav() {
   document.querySelectorAll('[data-pub]').forEach(btn => {
-    btn.addEventListener('click', () => {
+    btn.classList.toggle('active', btn.dataset.pub === viewAtual);
+    btn.onclick = () => {
       document.querySelectorAll('[data-pub]').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       viewAtual = btn.dataset.pub;
       renderView(viewAtual);
-    });
+    };
   });
 }
 
 function bindAdmNav() {
   document.querySelectorAll('[data-adm]').forEach(btn => {
-    btn.addEventListener('click', () => {
+    btn.classList.toggle('active', btn.dataset.adm === viewAtual);
+    btn.onclick = () => {
       document.querySelectorAll('[data-adm]').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       viewAtual = btn.dataset.adm;
       renderView(viewAtual);
-    });
+    };
   });
 }
 
@@ -463,27 +425,24 @@ el('login-btn').onclick = async () => {
     renderApp();
   }
 };
-
 el('login-voltar').onclick = () => { hide('login-screen'); show('app'); };
 el('login-senha').addEventListener('keydown', e => e.key === 'Enter' && el('login-btn').click());
 
-// ═══════════════════════════════════════
-// VIEWS
-// ═══════════════════════════════════════
+// ═══ VIEWS ═══
 function renderView(v) {
   viewAtual = v;
   const c = el('content');
   c.innerHTML = '';
-
   if (v === 'materiais')     renderMateriais(c, false);
   if (v === 'frequencia')    renderFreqPublica(c);
   if (v === 'chamada')       renderChamada(c);
   if (v === 'relatorios')    renderRelatorios(c);
   if (v === 'materiais-adm') renderMateriais(c, true);
   if (v === 'discipulandos') renderDiscipulandos(c);
+  if (v === 'estrutura')     renderEstrutura(c);
 }
 
-// ─── MATERIAIS (público + admin) ───
+// ─── MATERIAIS ───
 let _modAberto = null, _encAberto = null;
 
 function renderMateriais(c, isAdmin) {
@@ -503,9 +462,9 @@ function renderMateriais(c, isAdmin) {
   }
 
   modulos.forEach(mod => {
-    const enc_count = mod.encontros.length;
     const card = document.createElement('div');
     card.className = 'mod-card';
+    const enc_count = mod.encontros.length;
 
     card.innerHTML = `
       <div class="mod-head" data-mid="${mod.id}">
@@ -515,7 +474,7 @@ function renderMateriais(c, isAdmin) {
           ${mod.descricao ? `<div style="font-size:12px;color:var(--text3)">${mod.descricao}</div>` : ''}
         </div>
         <span class="badge bg-gray">${enc_count} encontro${enc_count!==1?'s':''}</span>
-        <span class="arr" style="font-size:12px;color:var(--text3);margin-left:8px">${_modAberto===mod.id?'▲':'▼'}</span>
+        <span style="font-size:12px;color:var(--text3);margin-left:8px">${_modAberto===mod.id?'▲':'▼'}</span>
       </div>`;
 
     if (_modAberto === mod.id) {
@@ -526,7 +485,6 @@ function renderMateriais(c, isAdmin) {
         const eitem = document.createElement('div');
         eitem.className = 'enc-item';
 
-        const mCount = enc.materiais.length;
         eitem.innerHTML = `
           <div class="enc-head" data-eid="${enc.id}">
             <div class="enc-num">${enc.numero}</div>
@@ -542,7 +500,7 @@ function renderMateriais(c, isAdmin) {
           const ml = document.createElement('div');
           ml.className = 'mat-list';
 
-          if (enc.materiais.length === 0) {
+          if (!enc.materiais.length) {
             ml.innerHTML = `<p style="font-size:12px;color:var(--text3);padding:4px 0">Nenhum material disponível.</p>`;
           }
 
@@ -564,8 +522,7 @@ function renderMateriais(c, isAdmin) {
           if (isAdmin) {
             const lbl = document.createElement('label');
             lbl.className = 'btn btn-out btn-sm';
-            lbl.style.cursor = 'pointer';
-            lbl.style.marginTop = '4px';
+            lbl.style.cssText = 'cursor:pointer;margin-top:4px';
             lbl.innerHTML = `+ Adicionar arquivo <input type="file" style="display:none" accept=".pdf,.pptx,.docx,.xlsx,.mp4,.zip" data-encid="${enc.id}">`;
             ml.appendChild(lbl);
           }
@@ -575,7 +532,6 @@ function renderMateriais(c, isAdmin) {
 
         body.appendChild(eitem);
 
-        // bind enc header
         eitem.querySelector('.enc-head').addEventListener('click', () => {
           _encAberto = _encAberto === enc.id ? null : enc.id;
           renderView(viewAtual);
@@ -587,8 +543,7 @@ function renderMateriais(c, isAdmin) {
               e.stopPropagation();
               if (!confirm('Remover este material?')) return;
               await sb.from('materiais').delete().eq('id', btn.dataset.del);
-              await carregarDados();
-              renderView(viewAtual);
+              await carregarDados(); renderView(viewAtual);
             });
           });
           const inp = eitem.querySelector('input[data-encid]');
@@ -609,9 +564,7 @@ function renderMateriais(c, isAdmin) {
               await carregarDados();
               notif('Material adicionado!');
               renderView(viewAtual);
-            } catch(err) {
-              notif('Erro no upload: ' + err.message, 'err');
-            }
+            } catch(err) { notif('Erro no upload: ' + err.message, 'err'); }
           });
         }
       });
@@ -637,13 +590,11 @@ function renderFreqPublica(c) {
   const wrap = document.createElement('div');
   wrap.className = 'page';
 
-  const enc = todosEncontros();
-  const real = enc.filter(e => e.realizado);
-
+  const real = todosEncontros().filter(e => e.realizado);
   wrap.innerHTML = `
     <div class="stats">
       <div class="stat"><div class="stat-l">Participantes</div><div class="stat-v">${discipulandos.length}</div></div>
-      <div class="stat"><div class="stat-l">Encontros realizados</div><div class="stat-v">${real.length}</div><div class="stat-s">de ${enc.length} total</div></div>
+      <div class="stat"><div class="stat-l">Encontros realizados</div><div class="stat-v">${real.length}</div><div class="stat-s">de ${todosEncontros().length} total</div></div>
     </div>
     <div class="sh"><span class="sh-t">Frequência por pessoa</span></div>`;
 
@@ -666,159 +617,444 @@ function renderFreqPublica(c) {
   c.appendChild(wrap);
 }
 
-// ─── CHAMADA (admin) ───
-let _chamadaAtual = {};
+// ─── CHAMADA (admin) — CORRIGIDA ───
+// _chamadaAtual: Map<discipulando_id, boolean>  (true = presente, false = ausente)
+let _chamadaAtual = new Map();
 let _encSel = null;
+
+function carregarChamadaParaEncontro(encId) {
+  _chamadaAtual = new Map();
+  discipulandos.forEach(d => {
+    const reg = chamadas.find(c => c.encontro_id === encId && c.discipulando_id === d.id);
+    // Se já existe registro salvo, usa ele. Senão, não pré-define (usuário escolhe)
+    // Para novo encontro sem nenhum registro, começa como "presente" por padrão
+    if (reg !== undefined) {
+      _chamadaAtual.set(d.id, reg.presente);
+    } else {
+      _chamadaAtual.set(d.id, true); // padrão: presente
+    }
+  });
+}
 
 function renderChamada(c) {
   const enc = todosEncontros();
-  if (!_encSel && enc.length > 0) _encSel = enc[0].id;
 
-  // Garante que chamadaAtual tem todos os discipulandos
-  if (_encSel && Object.keys(_chamadaAtual).length === 0) {
-    discipulandos.forEach(d => {
-      const ch = chamadas.find(c => c.encontro_id === _encSel && c.discipulando_id === d.id);
-      _chamadaAtual[d.id] = ch ? ch.presente : true;
-    });
+  // Seleciona primeiro encontro se nenhum selecionado
+  if (!_encSel && enc.length > 0) {
+    _encSel = enc[0].id;
+    carregarChamadaParaEncontro(_encSel);
   }
 
   const wrap = document.createElement('div');
   wrap.className = 'page';
 
-  // Seletor de encontro
-  let opts = '';
-  modulos.forEach(m => {
-    opts += `<optgroup label="${m.numero}. ${m.titulo}">`;
-    m.encontros.forEach(e => {
-      opts += `<option value="${e.id}" ${e.id===_encSel?'selected':''}>${e.numero}. ${e.titulo}${e.data?' — '+fmtData(e.data):''}</option>`;
-    });
-    opts += `</optgroup>`;
-  });
+  if (enc.length === 0) {
+    wrap.innerHTML = `<div class="empty"><div class="empty-i">📋</div><p>Nenhum encontro cadastrado ainda.<br>Vá em <b>Módulos & Encontros</b> para criar.</p></div>`;
+    c.appendChild(wrap);
+    return;
+  }
 
   const encAtual = enc.find(e => e.id === _encSel);
-  const presentes = Object.values(_chamadaAtual).filter(Boolean).length;
-  const pct = discipulandos.length ? Math.round(presentes/discipulandos.length*100) : 0;
+  const presentes = [..._chamadaAtual.values()].filter(Boolean).length;
+  const total = discipulandos.length;
+  const pct = total ? Math.round(presentes/total*100) : 0;
 
+  // Cabeçalho + stats
   wrap.innerHTML = `
-    <div class="box" style="margin-bottom:1rem">
-      <div class="gap" style="margin-bottom:0">
-        <div style="flex:1;min-width:200px">
-          <label class="fl">Selecionar encontro</label>
-          <select class="fi" id="enc-sel">${opts}</select>
-        </div>
-        ${encAtual ? `<span class="badge ${encAtual.realizado?'bg-green':'bg-gray'}" style="margin-top:18px">${encAtual.realizado?'✓ Realizado':'Agendado'}</span>` : ''}
-      </div>
+    <div class="sh" style="margin-bottom:.75rem">
+      <span class="sh-t">Chamada</span>
+      ${encAtual ? `<span class="badge ${encAtual.realizado?'bg-green':'bg-amber'}">${encAtual.realizado?'✓ Realizado':'Pendente'}</span>` : ''}
     </div>
     <div class="stats">
-      <div class="stat"><div class="stat-l">Presentes</div><div class="stat-v" id="stat-pres">${presentes}</div><div class="stat-s">de ${discipulandos.length}</div></div>
+      <div class="stat"><div class="stat-l">Presentes</div><div class="stat-v" id="stat-pres">${presentes}</div><div class="stat-s">de ${total}</div></div>
       <div class="stat"><div class="stat-l">Taxa</div><div class="stat-v" id="stat-pct">${pct}%</div><div class="stat-s">neste encontro</div></div>
-    </div>
-    <div id="notif-chamada"></div>
-    <div class="pres-list" id="pres-list"></div>
-    <div class="gap" style="margin-top:1.25rem">
-      <button class="btn btn-acc" id="btn-salvar-chamada">✓ Salvar chamada</button>
     </div>`;
+
+  const layout = document.createElement('div');
+  layout.className = 'chamada-layout';
+
+  // ── Painel esquerdo: lista de encontros ──
+  const sidebar = document.createElement('div');
+  sidebar.className = 'chamada-sidebar';
+
+  const sideHtml = [`<div style="font-size:12px;font-weight:500;color:var(--text2);margin-bottom:.5rem">Selecionar encontro</div>`];
+
+  modulos.forEach(mod => {
+    sideHtml.push(`<div class="enc-sel-group-label">${mod.numero}. ${mod.titulo}</div>`);
+    mod.encontros.forEach(enc => {
+      const isActive = enc.id === _encSel;
+      sideHtml.push(`
+        <button class="enc-sel-btn ${isActive?'active':''}" data-encid="${enc.id}">
+          <div class="enc-sel-n">${enc.numero}</div>
+          <div style="flex:1;text-align:left">
+            <div>${enc.titulo}</div>
+            ${enc.data ? `<div style="font-size:11px;opacity:.6">${fmtData(enc.data)}</div>` : ''}
+          </div>
+          ${enc.realizado ? `<span style="font-size:10px;color:var(--green)">✓</span>` : ''}
+        </button>`);
+    });
+  });
+
+  sidebar.innerHTML = sideHtml.join('');
+  layout.appendChild(sidebar);
+
+  // Bind botões de seleção de encontro
+  sidebar.querySelectorAll('[data-encid]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      _encSel = btn.dataset.encid;
+      carregarChamadaParaEncontro(_encSel);
+      renderView('chamada');
+    });
+  });
+
+  // ── Painel direito: lista de presença ──
+  const main = document.createElement('div');
+
+  if (!encAtual) {
+    main.innerHTML = `<div class="empty"><div class="empty-i">←</div><p>Selecione um encontro ao lado.</p></div>`;
+  } else {
+    const list = document.createElement('div');
+    list.className = 'pres-list';
+    list.id = 'pres-list';
+
+    if (discipulandos.length === 0) {
+      list.innerHTML = `<div class="empty"><div class="empty-i">👤</div><p>Nenhum discipulando cadastrado.</p></div>`;
+    }
+
+    discipulandos.forEach((d, i) => {
+      const presente = _chamadaAtual.get(d.id) === true;
+      const {pct: fp} = getFreq(d.id);
+
+      const row = document.createElement('div');
+      row.className = 'pres-row';
+      row.innerHTML = `
+        ${av(d.nome, i)}
+        <div style="flex:1">
+          <div class="pname">${d.nome}</div>
+          <div class="pfreq">Frequência geral: ${fp}%</div>
+        </div>
+        <button class="tog ${presente?'tog-p':'tog-a'}" data-disc="${d.id}">${presente?'Presente':'Ausente'}</button>`;
+
+      // Toggle correto — sem double-click bug
+      row.querySelector('[data-disc]').addEventListener('click', function() {
+        const novoValor = !_chamadaAtual.get(d.id);
+        _chamadaAtual.set(d.id, novoValor);
+        this.className = `tog ${novoValor?'tog-p':'tog-a'}`;
+        this.textContent = novoValor ? 'Presente' : 'Ausente';
+        const p = [..._chamadaAtual.values()].filter(Boolean).length;
+        el('stat-pres').textContent = p;
+        el('stat-pct').textContent = Math.round(p/discipulandos.length*100)+'%';
+      });
+
+      list.appendChild(row);
+    });
+
+    main.appendChild(list);
+
+    const footer = document.createElement('div');
+    footer.className = 'gap';
+    footer.style.marginTop = '1rem';
+    footer.innerHTML = `<button class="btn btn-acc" id="btn-salvar-chamada">✓ Salvar chamada</button>`;
+    main.appendChild(footer);
+
+    main.querySelector('#btn-salvar-chamada').addEventListener('click', async () => {
+      const btn = main.querySelector('#btn-salvar-chamada');
+      btn.textContent = 'Salvando...';
+      btn.disabled = true;
+      try {
+        const ups = discipulandos.map(d => ({
+          encontro_id: _encSel,
+          discipulando_id: d.id,
+          presente: _chamadaAtual.get(d.id) === true
+        }));
+        await sb.from('chamadas').upsert(ups, { onConflict: 'encontro_id,discipulando_id' });
+        // Marca encontro como realizado
+        const encRef = enc.find(e => e.id === _encSel);
+        if (encRef && !encRef.realizado) {
+          await sb.from('encontros').update({ realizado: true }).eq('id', _encSel);
+        }
+        await carregarDados();
+        notif('Chamada salva com sucesso!');
+        btn.textContent = '✓ Salvar chamada';
+        btn.disabled = false;
+      } catch(e) {
+        notif('Erro ao salvar: ' + e.message, 'err');
+        btn.textContent = '✓ Salvar chamada';
+        btn.disabled = false;
+      }
+    });
+  }
+
+  layout.appendChild(main);
+  wrap.appendChild(layout);
+  c.appendChild(wrap);
+}
+
+// ─── ESTRUTURA: MÓDULOS E ENCONTROS (admin) ───
+let _estrutMod = null; // módulo expandido
+
+function renderEstrutura(c) {
+  const wrap = document.createElement('div');
+  wrap.className = 'page';
+
+  const sh = document.createElement('div');
+  sh.className = 'sh';
+  sh.innerHTML = `<span class="sh-t">Módulos & Encontros</span>`;
+  const addModBtn = document.createElement('button');
+  addModBtn.className = 'btn btn-acc btn-sm';
+  addModBtn.textContent = '+ Novo módulo';
+  sh.appendChild(addModBtn);
+  wrap.appendChild(sh);
+
+  if (modulos.length === 0) {
+    const empty = document.createElement('div');
+    empty.className = 'empty';
+    empty.innerHTML = `<div class="empty-i">📦</div><p>Nenhum módulo criado ainda.<br>Clique em <b>+ Novo módulo</b> para começar.</p>`;
+    wrap.appendChild(empty);
+  }
+
+  modulos.forEach(mod => {
+    const card = document.createElement('div');
+    card.className = 'adm-mod-card';
+    const open = _estrutMod === mod.id;
+
+    card.innerHTML = `
+      <div class="adm-mod-head" data-mid="${mod.id}">
+        <div style="width:28px;height:28px;border-radius:6px;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;flex-shrink:0">${mod.numero}</div>
+        <span class="adm-mod-title">${mod.titulo}</span>
+        <div class="adm-actions" onclick="event.stopPropagation()">
+          <button class="btn btn-out btn-sm btn-edit-mod" data-mid="${mod.id}" title="Editar módulo">✏️</button>
+          <button class="btn btn-danger btn-sm btn-del-mod" data-mid="${mod.id}" title="Excluir módulo">🗑</button>
+        </div>
+        <span style="font-size:12px;color:var(--accent);margin-left:4px">${open?'▲':'▼'}</span>
+      </div>`;
+
+    if (open) {
+      const body = document.createElement('div');
+
+      if (mod.encontros.length === 0) {
+        const noEnc = document.createElement('div');
+        noEnc.style.cssText = 'padding:.75rem 1.25rem;font-size:13px;color:var(--text3)';
+        noEnc.textContent = 'Nenhum encontro ainda.';
+        body.appendChild(noEnc);
+      }
+
+      mod.encontros.forEach(enc => {
+        const row = document.createElement('div');
+        row.className = 'adm-enc-row';
+        row.innerHTML = `
+          <div style="width:24px;height:24px;border-radius:5px;background:var(--muted);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:var(--text2);flex-shrink:0">${enc.numero}</div>
+          <span class="adm-enc-name">${enc.titulo}</span>
+          ${enc.data ? `<span style="font-size:11px;color:var(--text3)">${fmtData(enc.data)}</span>` : ''}
+          <span class="badge ${enc.realizado?'bg-green':'bg-gray'}" style="margin-left:6px">${enc.realizado?'Realizado':'Agendado'}</span>
+          <div class="adm-actions">
+            <button class="btn btn-out btn-sm btn-edit-enc" data-eid="${enc.id}" data-mid="${mod.id}" title="Editar encontro">✏️</button>
+            <button class="btn btn-danger btn-sm btn-del-enc" data-eid="${enc.id}" title="Excluir encontro">🗑</button>
+          </div>`;
+        body.appendChild(row);
+      });
+
+      // Botão adicionar encontro
+      const addEnc = document.createElement('div');
+      addEnc.className = 'adm-add-enc';
+      addEnc.innerHTML = `<button class="btn btn-out btn-sm btn-add-enc" data-mid="${mod.id}">+ Novo encontro</button>`;
+      body.appendChild(addEnc);
+
+      card.appendChild(body);
+    }
+
+    // Binds
+    card.querySelector('.adm-mod-head').addEventListener('click', () => {
+      _estrutMod = _estrutMod === mod.id ? null : mod.id;
+      renderView('estrutura');
+    });
+
+    card.querySelector('.btn-edit-mod').addEventListener('click', (e) => {
+      e.stopPropagation();
+      abrirModalMod(mod);
+    });
+
+    card.querySelector('.btn-del-mod').addEventListener('click', async (e) => {
+      e.stopPropagation();
+      if (!confirm(`Excluir o módulo "${mod.titulo}" e todos os seus encontros?`)) return;
+      await sb.from('modulos').delete().eq('id', mod.id);
+      await carregarDados();
+      notif('Módulo excluído.');
+      renderView('estrutura');
+    });
+
+    if (open) {
+      card.querySelector('.btn-add-enc')?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        abrirModalEnc(null, mod.id, mod.encontros.length + 1);
+      });
+
+      card.querySelectorAll('.btn-edit-enc').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const enc = mod.encontros.find(en => en.id === btn.dataset.eid);
+          abrirModalEnc(enc, mod.id, enc?.numero);
+        });
+      });
+
+      card.querySelectorAll('.btn-del-enc').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+          e.stopPropagation();
+          if (!confirm('Excluir este encontro?')) return;
+          await sb.from('encontros').delete().eq('id', btn.dataset.eid);
+          await carregarDados();
+          notif('Encontro excluído.');
+          renderView('estrutura');
+        });
+      });
+    }
+
+    wrap.appendChild(card);
+  });
 
   c.appendChild(wrap);
 
-  // Bind seletor
-  el('enc-sel').addEventListener('change', async (e) => {
-    _encSel = e.target.value;
-    _chamadaAtual = {};
-    discipulandos.forEach(d => {
-      const ch = chamadas.find(c => c.encontro_id === _encSel && c.discipulando_id === d.id);
-      _chamadaAtual[d.id] = ch ? ch.presente : true;
-    });
-    renderChamada(c); c.querySelector('.page').scrollTop = 0;
-  });
-
-  // Renderiza lista
-  const list = el('pres-list');
-  discipulandos.forEach((d, i) => {
-    const {pct: fp} = getFreq(d.id);
-    const presente = _chamadaAtual[d.id] !== false;
-    const row = document.createElement('div');
-    row.className = 'pres-row';
-    row.innerHTML = `
-      ${av(d.nome, i)}
-      <div style="flex:1">
-        <div class="pname">${d.nome}</div>
-        <div class="pfreq">Frequência geral: ${fp}%</div>
-      </div>
-      <button class="tog ${presente?'tog-p':'tog-a'}" data-disc="${d.id}">${presente?'Presente':'Ausente'}</button>`;
-    list.appendChild(row);
-
-    row.querySelector(`[data-disc]`).addEventListener('click', (e) => {
-      _chamadaAtual[d.id] = !_chamadaAtual[d.id];
-      const b = e.currentTarget;
-      const val = _chamadaAtual[d.id];
-      b.className = `tog ${val?'tog-p':'tog-a'}`;
-      b.textContent = val ? 'Presente' : 'Ausente';
-      // atualiza stats
-      const p = Object.values(_chamadaAtual).filter(Boolean).length;
-      el('stat-pres').textContent = p;
-      el('stat-pct').textContent = Math.round(p/discipulandos.length*100)+'%';
-    });
-  });
-
-  el('btn-salvar-chamada').addEventListener('click', async () => {
-    el('btn-salvar-chamada').textContent = 'Salvando...';
-    try {
-      const ups = discipulandos.map(d => ({
-        encontro_id: _encSel, discipulando_id: d.id, presente: !!_chamadaAtual[d.id]
-      }));
-      await sb.from('chamadas').upsert(ups, { onConflict: 'encontro_id,discipulando_id' });
-      const encAtual = todosEncontros().find(e => e.id === _encSel);
-      if (encAtual && !encAtual.realizado) {
-        await sb.from('encontros').update({ realizado: true }).eq('id', _encSel);
-      }
-      await carregarDados();
-      notif('Chamada salva com sucesso!');
-      el('btn-salvar-chamada').textContent = '✓ Salvar chamada';
-    } catch(e) {
-      notif('Erro ao salvar: ' + e.message, 'err');
-      el('btn-salvar-chamada').textContent = '✓ Salvar chamada';
-    }
-  });
+  addModBtn.addEventListener('click', () => abrirModalMod(null));
 }
 
-// ─── RELATÓRIOS (admin) ───
+function abrirModalMod(mod) {
+  const isEdit = !!mod;
+  const ow = document.createElement('div');
+  ow.className = 'overlay';
+  ow.innerHTML = `
+    <div class="modal">
+      <div class="modal-t">${isEdit?'Editar módulo':'Novo módulo'}</div>
+      <div class="fg">
+        <label class="fl">Número</label>
+        <input class="fi" id="m-num" type="number" min="1" value="${isEdit?mod.numero:(modulos.length+1)}" placeholder="1">
+      </div>
+      <div class="fg">
+        <label class="fl">Título *</label>
+        <input class="fi" id="m-titulo" placeholder="Ex: Identidade em Cristo" value="${isEdit?mod.titulo:''}">
+      </div>
+      <div class="fg">
+        <label class="fl">Descrição (opcional)</label>
+        <input class="fi" id="m-desc" placeholder="Breve descrição do módulo" value="${isEdit&&mod.descricao?mod.descricao:''}">
+      </div>
+      <div id="m-err" class="notif notif-err hide"></div>
+      <div class="modal-f">
+        <button class="btn btn-ghost" id="m-cancel">Cancelar</button>
+        <button class="btn btn-acc" id="m-save">${isEdit?'Salvar':'Criar módulo'}</button>
+      </div>
+    </div>`;
+
+  document.body.appendChild(ow);
+  ow.addEventListener('click', e => e.target===ow && ow.remove());
+  ow.querySelector('#m-cancel').onclick = () => ow.remove();
+  setTimeout(() => ow.querySelector('#m-titulo').focus(), 50);
+
+  ow.querySelector('#m-save').onclick = async () => {
+    const titulo = ow.querySelector('#m-titulo').value.trim();
+    const numero = parseInt(ow.querySelector('#m-num').value) || (modulos.length+1);
+    const descricao = ow.querySelector('#m-desc').value.trim() || null;
+    if (!titulo) {
+      ow.querySelector('#m-err').textContent = 'Informe o título.';
+      ow.querySelector('#m-err').classList.remove('hide');
+      return;
+    }
+    ow.querySelector('#m-save').textContent = 'Salvando...';
+    if (isEdit) {
+      await sb.from('modulos').update({ numero, titulo, descricao }).eq('id', mod.id);
+    } else {
+      const { data } = await sb.from('modulos').insert({ numero, titulo, descricao }).select().single();
+      if (data) _estrutMod = data.id;
+    }
+    ow.remove();
+    await carregarDados();
+    notif(isEdit ? 'Módulo atualizado!' : 'Módulo criado!');
+    renderView('estrutura');
+  };
+}
+
+function abrirModalEnc(enc, modId, nextNum) {
+  const isEdit = !!enc;
+  const ow = document.createElement('div');
+  ow.className = 'overlay';
+  ow.innerHTML = `
+    <div class="modal">
+      <div class="modal-t">${isEdit?'Editar encontro':'Novo encontro'}</div>
+      <div class="fg">
+        <label class="fl">Número</label>
+        <input class="fi" id="e-num" type="number" min="1" value="${isEdit?enc.numero:(nextNum||1)}" placeholder="1">
+      </div>
+      <div class="fg">
+        <label class="fl">Título *</label>
+        <input class="fi" id="e-titulo" placeholder="Ex: Quem sou eu em Cristo?" value="${isEdit?enc.titulo:''}">
+      </div>
+      <div class="fg">
+        <label class="fl">Data (opcional)</label>
+        <input class="fi" id="e-data" type="date" value="${isEdit&&enc.data?enc.data:''}">
+      </div>
+      <div id="e-err" class="notif notif-err hide"></div>
+      <div class="modal-f">
+        <button class="btn btn-ghost" id="e-cancel">Cancelar</button>
+        <button class="btn btn-acc" id="e-save">${isEdit?'Salvar':'Criar encontro'}</button>
+      </div>
+    </div>`;
+
+  document.body.appendChild(ow);
+  ow.addEventListener('click', e => e.target===ow && ow.remove());
+  ow.querySelector('#e-cancel').onclick = () => ow.remove();
+  setTimeout(() => ow.querySelector('#e-titulo').focus(), 50);
+
+  ow.querySelector('#e-save').onclick = async () => {
+    const titulo = ow.querySelector('#e-titulo').value.trim();
+    const numero = parseInt(ow.querySelector('#e-num').value) || (nextNum||1);
+    const data = ow.querySelector('#e-data').value || null;
+    if (!titulo) {
+      ow.querySelector('#e-err').textContent = 'Informe o título.';
+      ow.querySelector('#e-err').classList.remove('hide');
+      return;
+    }
+    ow.querySelector('#e-save').textContent = 'Salvando...';
+    if (isEdit) {
+      await sb.from('encontros').update({ numero, titulo, data }).eq('id', enc.id);
+    } else {
+      await sb.from('encontros').insert({ numero, titulo, data, modulo_id: modId, realizado: false });
+    }
+    ow.remove();
+    await carregarDados();
+    notif(isEdit ? 'Encontro atualizado!' : 'Encontro criado!');
+    renderView('estrutura');
+  };
+}
+
+// ─── RELATÓRIOS ───
 function renderRelatorios(c) {
   const wrap = document.createElement('div');
   wrap.className = 'page';
 
-  const enc = todosEncontros();
-  const real = enc.filter(e => e.realizado);
+  const real = todosEncontros().filter(e => e.realizado);
 
   wrap.innerHTML = `
     <div class="sh"><span class="sh-t">Exportar planilhas</span></div>
-    <div class="box exp-card">
+    <div class="box exp-card" style="margin-bottom:10px">
       <div class="exp-info" style="flex:1">
         <h3>Frequência geral</h3>
         <p>Uma linha por pessoa: presenças, faltas e percentual.</p>
       </div>
       <button class="btn btn-acc" id="btn-exp-freq">↓ Baixar</button>
     </div>
-    <div style="margin-bottom:10px"></div>
     <div class="box exp-card">
       <div class="exp-info" style="flex:1">
         <h3>Relatório completo</h3>
-        <p>3 abas no Excel: chamada por encontro (P/A), lista de materiais e resumo de frequência.</p>
+        <p>3 abas: chamada por encontro (P/A), lista de materiais e resumo de frequência.</p>
       </div>
       <button class="btn btn-acc" id="btn-exp-full">↓ Baixar</button>
     </div>
-
     <div style="margin-top:2rem">
       <div class="sh"><span class="sh-t">Frequência por pessoa</span></div>
       <div id="freq-bars"></div>
-      <p style="font-size:12px;color:var(--text3);margin-top:8px">
-        Verde ≥ 75% · Âmbar ≥ 50% · Vermelho &lt; 50% · Baseado em ${real.length} encontro(s) realizado(s)
-      </p>
+      <p style="font-size:12px;color:var(--text3);margin-top:8px">Verde ≥ 75% · Âmbar ≥ 50% · Vermelho &lt; 50% · Baseado em ${real.length} encontro(s) realizado(s)</p>
     </div>`;
 
   c.appendChild(wrap);
 
-  // Barras
   const bars = el('freq-bars');
   discipulandos.forEach(d => {
     const {pct} = getFreq(d.id);
@@ -832,20 +1068,14 @@ function renderRelatorios(c) {
     bars.appendChild(row);
   });
 
-  el('btn-exp-freq').addEventListener('click', () => exportFreq());
-  el('btn-exp-full').addEventListener('click', () => exportFull());
+  el('btn-exp-freq').addEventListener('click', exportFreq);
+  el('btn-exp-full').addEventListener('click', exportFull);
 }
 
 function exportFreq() {
-  const enc = todosEncontros();
   const rows = discipulandos.map(d => {
     const {pct, pres, total} = getFreq(d.id);
-    return {
-      'Nome': d.nome, 'E-mail': d.email||'', 'Telefone': d.telefone||'',
-      'Presenças': pres, 'Encontros realizados': total,
-      'Frequência (%)': pct+'%',
-      'Situação': pct>=75?'Regular':pct>=50?'Atenção':'Irregular'
-    };
+    return {'Nome':d.nome,'E-mail':d.email||'','Telefone':d.telefone||'','Presenças':pres,'Encontros realizados':total,'Frequência (%)':pct+'%','Situação':pct>=75?'Regular':pct>=50?'Atenção':'Irregular'};
   });
   const ws = XLSX.utils.json_to_sheet(rows);
   ws['!cols'] = [{wch:26},{wch:26},{wch:14},{wch:10},{wch:22},{wch:14},{wch:12}];
@@ -857,50 +1087,45 @@ function exportFreq() {
 function exportFull() {
   const enc = todosEncontros().filter(e => e.realizado).sort((a,b) => a.numero-b.numero);
   const wb = XLSX.utils.book_new();
-
-  // Aba 1: Chamada
-  const cab = ['Nome', ...enc.map(e => `E${e.numero}-${e.titulo}`.slice(0,28)), 'Total ✓', 'Total ✗', 'Freq.'];
+  const cab = ['Nome',...enc.map(e=>`E${e.numero}-${e.titulo}`.slice(0,28)),'Total ✓','Total ✗','Freq.'];
   const rows = discipulandos.map(d => {
-    const obj = { 'Nome': d.nome };
+    const obj = {'Nome':d.nome};
     let p=0, a=0;
     enc.forEach(e => {
-      const c = chamadas.find(c => c.encontro_id===e.id && c.discipulando_id===d.id);
-      const v = c?.presente ? 'P' : 'A';
+      const ch = chamadas.find(c => c.encontro_id===e.id && c.discipulando_id===d.id);
+      const v = ch?.presente ? 'P' : 'A';
       if(v==='P') p++; else a++;
       obj[`E${e.numero}-${e.titulo}`.slice(0,28)] = v;
     });
-    obj['Total ✓'] = p; obj['Total ✗'] = a;
-    obj['Freq.'] = enc.length ? Math.round(p/enc.length*100)+'%' : '0%';
+    obj['Total ✓']=p; obj['Total ✗']=a;
+    obj['Freq.']=enc.length ? Math.round(p/enc.length*100)+'%':'0%';
     return obj;
   });
-  const ws1 = XLSX.utils.json_to_sheet(rows, {header:cab});
-  ws1['!cols'] = [{wch:24},...enc.map(()=>({wch:14})),{wch:9},{wch:9},{wch:8}];
-  XLSX.utils.book_append_sheet(wb, ws1, 'Chamada');
+  const ws1 = XLSX.utils.json_to_sheet(rows,{header:cab});
+  ws1['!cols']=[{wch:24},...enc.map(()=>({wch:14})),{wch:9},{wch:9},{wch:8}];
+  XLSX.utils.book_append_sheet(wb,ws1,'Chamada');
 
-  // Aba 2: Materiais
-  const rowsMat = [];
-  modulos.forEach(m => m.encontros.forEach(e => e.materiais.forEach(mat => {
+  const rowsMat=[];
+  modulos.forEach(m=>m.encontros.forEach(e=>e.materiais.forEach(mat=>{
     rowsMat.push({'Módulo':`${m.numero}. ${m.titulo}`,'Encontro':`${e.numero}. ${e.titulo}`,'Data':fmtData(e.data),'Material':mat.nome,'Tipo':mat.tipo,'Tamanho':fmtTam(mat.tamanho_kb),'Link':mat.url});
   })));
-  if (rowsMat.length) {
-    const ws2 = XLSX.utils.json_to_sheet(rowsMat);
-    ws2['!cols'] = [{wch:26},{wch:26},{wch:12},{wch:30},{wch:8},{wch:12},{wch:50}];
-    XLSX.utils.book_append_sheet(wb, ws2, 'Materiais');
+  if(rowsMat.length){
+    const ws2=XLSX.utils.json_to_sheet(rowsMat);
+    ws2['!cols']=[{wch:26},{wch:26},{wch:12},{wch:30},{wch:8},{wch:12},{wch:50}];
+    XLSX.utils.book_append_sheet(wb,ws2,'Materiais');
   }
 
-  // Aba 3: Resumo
-  const rowsRes = discipulandos.map(d => {
-    const {pct,pres,total} = getFreq(d.id);
-    return {'Nome':d.nome,'E-mail':d.email||'','Presenças':pres,'Faltas':total-pres,'Total':total,'Frequência':pct+'%','Situação':pct>=75?'Regular':pct>=50?'Atenção':'Irregular'};
+  const rowsRes=discipulandos.map(d=>{
+    const {pct,pres,total}=getFreq(d.id);
+    return{'Nome':d.nome,'E-mail':d.email||'','Presenças':pres,'Faltas':total-pres,'Total':total,'Frequência':pct+'%','Situação':pct>=75?'Regular':pct>=50?'Atenção':'Irregular'};
   });
-  const ws3 = XLSX.utils.json_to_sheet(rowsRes);
-  ws3['!cols'] = [{wch:26},{wch:26},{wch:10},{wch:8},{wch:8},{wch:12},{wch:12}];
-  XLSX.utils.book_append_sheet(wb, ws3, 'Resumo');
-
-  XLSX.writeFile(wb, 'relatorio_completo_discipulado.xlsx');
+  const ws3=XLSX.utils.json_to_sheet(rowsRes);
+  ws3['!cols']=[{wch:26},{wch:26},{wch:10},{wch:8},{wch:8},{wch:12},{wch:12}];
+  XLSX.utils.book_append_sheet(wb,ws3,'Resumo');
+  XLSX.writeFile(wb,'relatorio_completo_discipulado.xlsx');
 }
 
-// ─── DISCIPULANDOS (admin) ───
+// ─── DISCIPULANDOS ───
 function renderDiscipulandos(c) {
   const wrap = document.createElement('div');
   wrap.className = 'page';
@@ -916,15 +1141,14 @@ function renderDiscipulandos(c) {
 
   const box = document.createElement('div');
   box.className = 'box';
-  box.style.padding = '0';
-  box.style.overflow = 'hidden';
+  box.style.cssText = 'padding:0;overflow:hidden';
 
   const tbl = document.createElement('table');
   tbl.className = 'dt';
   tbl.innerHTML = `<thead><tr><th>Nome</th><th>E-mail</th><th>Telefone</th></tr></thead>`;
   const tbody = document.createElement('tbody');
 
-  if (discipulandos.length === 0) {
+  if (!discipulandos.length) {
     tbody.innerHTML = `<tr><td colspan="3" style="text-align:center;color:var(--text3);padding:2rem">Nenhum discipulando cadastrado.</td></tr>`;
   }
 
@@ -949,7 +1173,7 @@ function abrirModalDisc() {
   const ow = document.createElement('div');
   ow.className = 'overlay';
   ow.innerHTML = `
-    <div class="modal" id="modal-disc">
+    <div class="modal">
       <div class="modal-t">Novo discipulando</div>
       <div class="fg"><label class="fl">Nome *</label><input class="fi" id="d-nome" placeholder="Nome completo" autofocus></div>
       <div class="fg"><label class="fl">E-mail</label><input class="fi" id="d-email" type="email" placeholder="email@exemplo.com"></div>
