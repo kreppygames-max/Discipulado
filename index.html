@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#4A3F8C">
 <link rel="manifest" href="data:application/json,{%22name%22:%22Discipulado%22,%22short_name%22:%22Discipulado%22,%22start_url%22:%22.%22,%22display%22:%22standalone%22,%22background_color%22:%22%23F7F5F0%22,%22theme_color%22:%22%234A3F8C%22}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script>
@@ -27,8 +27,7 @@
   --r:10px;--rl:16px;--rs:6px;
   --sh:0 1px 4px rgba(0,0,0,.07);
   --sh2:0 4px 16px rgba(0,0,0,.10);
-  --sidebar-w:264px;
-  --topbar2:52px;
+  --topbar-h:56px;--sidebar-w:242px;
 }
 [data-theme="dark"]{
   --bg:#151412;--card:#1E1C19;--muted:#252320;
@@ -44,7 +43,7 @@
 html{font-size:15px}
 body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh;-webkit-font-smoothing:antialiased;transition:background .2s,color .2s}
 .hide{display:none!important}
-.page{padding:1.5rem;max-width:900px;margin:0 auto}
+.page{padding:1.5rem;max-width:960px;margin:0 auto}
 .gap{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
 
 /* LOADING */
@@ -52,43 +51,57 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(-
 .spin{font-size:32px;color:var(--accent);animation:pulse 1.4s ease-in-out infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 
-/* SHELL / SIDEBAR (nova IA — inspirada em plataformas de curso) */
-.shell{display:flex;min-height:100vh}
-.sidebar{width:var(--sidebar-w);flex-shrink:0;background:var(--card);border-right:1px solid var(--border);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;transition:background .2s,border-color .2s,transform .25s;z-index:250}
-.sidebar-top{padding:1.1rem 1rem .8rem;border-bottom:1px solid var(--border)}
-.brand-row{display:flex;align-items:center;gap:8px;font-family:'Lora',serif;font-size:17px;font-weight:500;margin-bottom:.9rem}
-.brand-row .x{color:var(--accent);font-size:19px}
-.workspace-switch{display:flex;align-items:center;gap:6px;background:var(--muted);border:1px solid var(--border);border-radius:var(--r);padding:7px 9px}
-.workspace-switch select{flex:1;border:none;background:transparent;font-family:'DM Sans',sans-serif;font-size:12.5px;color:var(--text);outline:none;cursor:pointer;width:100%}
-.workspace-name{font-size:12.5px;font-weight:500;color:var(--text);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.ws-icon{font-size:14px;flex-shrink:0}
-.sidebar-nav{flex:1;overflow-y:auto;padding:.6rem .7rem}
-.snav-item{display:flex;align-items:center;gap:10px;width:100%;padding:9px 11px;border-radius:var(--r);border:none;background:transparent;font-family:'DM Sans',sans-serif;font-size:13.5px;color:var(--text2);cursor:pointer;text-align:left;margin-bottom:2px;transition:.15s}
-.snav-item:hover{background:var(--muted);color:var(--text)}
-.snav-item.active{background:var(--al);color:var(--accent);font-weight:500}
-.snav-ico{font-size:15px;width:18px;text-align:center;flex-shrink:0}
-.sidebar-bottom{padding:.7rem .7rem 1rem;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:2px}
-.sidebar-bottom .snav-item{color:var(--text3)}
-.sidebar-user-email{font-size:11px;color:var(--text3);padding:2px 11px 6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* PAGE HEADER (padrão único em todas as views) */
+.page-header{margin-bottom:1.25rem;display:flex;align-items:flex-end;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.page-header h1{font-family:'Lora',serif;font-size:22px;font-weight:500;line-height:1.2}
+.page-header p{font-size:13px;color:var(--text2);margin-top:3px}
+
+/* APP SHELL: sidebar + coluna principal */
+.app-shell{display:flex;min-height:100vh;align-items:stretch}
+.sidebar{width:var(--sidebar-w);flex-shrink:0;background:var(--card);border-right:1px solid var(--border);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto;transition:background .2s,border-color .2s,transform .2s ease;z-index:250}
+.sidebar-brand{display:flex;align-items:center;gap:9px;padding:1.15rem 1.25rem;font-family:'Lora',serif;font-size:16px;font-weight:500;border-bottom:1px solid var(--border);flex-shrink:0}
+.sidebar-brand .x{color:var(--accent);font-size:18px}
+.side-nav{padding:.75rem;display:flex;flex-direction:column;gap:2px;flex:1}
+.side-item{display:flex;align-items:center;gap:11px;padding:9px 12px;border-radius:var(--r);font-size:13px;color:var(--text2);cursor:pointer;border:none;background:transparent;text-align:left;width:100%;font-family:'DM Sans',sans-serif;transition:.15s}
+.side-item:hover{background:var(--muted);color:var(--text)}
+.side-item.active{background:var(--al);color:var(--accent);font-weight:600}
+.side-item .ic{font-size:15px;width:18px;text-align:center;flex-shrink:0}
+.side-foot{padding:.85rem;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:6px;flex-shrink:0}
+.sidebar-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.42);z-index:240}
+.sidebar-backdrop.show{display:block}
+
 .main-col{flex:1;min-width:0;display:flex;flex-direction:column}
-.topbar-slim{height:var(--topbar2);flex-shrink:0;display:flex;align-items:center;gap:10px;padding:0 1.25rem;border-bottom:1px solid var(--border);background:var(--card);position:sticky;top:0;z-index:150;transition:background .2s,border-color .2s}
-.page-title{font-family:'Lora',serif;font-size:15px;font-weight:500}
-.mobile-menu-btn{display:none;background:transparent;border:none;font-size:19px;color:var(--text2);cursor:pointer}
-.sidebar-backdrop{display:none}
-@media(max-width:880px){
-  .sidebar{position:fixed;left:0;top:0;transform:translateX(-100%);box-shadow:var(--sh2)}
+.topbar-slim{height:var(--topbar-h);flex-shrink:0;background:var(--card);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;padding:0 1.25rem;position:sticky;top:0;z-index:150;transition:background .2s,border-color .2s}
+.hamburger{display:none;background:none;border:none;font-size:18px;cursor:pointer;color:var(--text2);width:32px;height:32px;border-radius:8px;align-items:center;justify-content:center}
+.hamburger:hover{background:var(--muted)}
+
+@media(max-width:860px){
+  .sidebar{position:fixed;left:0;top:0;transform:translateX(-100%)}
   .sidebar.open{transform:translateX(0)}
-  .mobile-menu-btn{display:block}
-  .sidebar-backdrop.show{display:block;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:240}
+  .hamburger{display:inline-flex}
 }
 
-/* LOGIN / SETUP */
-#login-screen,#setup{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem;background:var(--bg)}
+/* ONBOARDING (seleção/criação de grupo) — tela própria, nunca convive com a sidebar */
+#onboarding{min-height:100vh;background:var(--bg)}
+.onb-topbar{height:var(--topbar-h);display:flex;align-items:center;gap:10px;padding:0 1.25rem;background:var(--card);border-bottom:1px solid var(--border)}
+
+.tbadge{font-size:11px;font-weight:500;background:var(--al);color:var(--accent);padding:3px 10px;border-radius:20px}
+.tuser{font-size:12px;color:var(--text3);max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.group-name{font-size:12px;font-weight:600;color:var(--accent);background:var(--al);padding:5px 10px;border-radius:var(--rs);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:flex;align-items:center;gap:5px}
+.group-name:hover{filter:brightness(.96)}
+.brand{font-family:'Lora',serif;font-size:16px;font-weight:500}
+
+.dark-btn{width:34px;height:34px;border-radius:50%;border:1px solid var(--border);background:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;transition:.15s;flex-shrink:0}
+.dark-btn:hover{background:var(--border)}
+
+/* LOGIN */
+#login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem;background:var(--bg)}
 .login-card,.setup-card{background:var(--card);border:1px solid var(--border);border-radius:var(--rl);padding:2.5rem;max-width:380px;width:100%;box-shadow:var(--sh2)}
 .login-logo{text-align:center;margin-bottom:2rem}
 .login-logo .cross{font-size:30px;color:var(--accent);display:block;margin-bottom:.5rem}
 .login-logo h2{font-family:'Lora',serif;font-size:19px;font-weight:500}
 .login-logo p{font-size:13px;color:var(--text2);margin-top:3px}
+#setup{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem;background:var(--bg)}
 
 /* STATS */
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:1.25rem}
@@ -116,7 +129,6 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(-
 .btn-danger{background:var(--redl);color:var(--red);border-color:#F0B3B3}
 .btn-danger:hover{filter:brightness(.95)}
 .btn-full{width:100%;justify-content:center;padding:10px}
-.btn:disabled{opacity:.6;cursor:default}
 
 /* FORM */
 .fg{margin-bottom:1rem}
@@ -139,57 +151,43 @@ select.fi{cursor:pointer}
 .notif-ok{background:var(--gl);color:var(--green);border:1px solid #C0DD97}
 .notif-err{background:var(--redl);color:var(--red);border:1px solid #F0B3B3}
 
-/* HERO (só no Início) */
-.hero{background:var(--accent);color:#fff;padding:2rem 1.5rem;text-align:center;position:relative;overflow:hidden;border-radius:var(--rl);margin-bottom:1.25rem}
-.hero::before{content:'✝';position:absolute;font-size:140px;opacity:.08;top:-10px;right:-10px;line-height:1;pointer-events:none}
-.hero h1{font-family:'Lora',serif;font-size:23px;font-weight:400;margin-bottom:.3rem}
-.hero p{font-size:13.5px;opacity:.8}
-
-/* DASHBOARD PROGRESSO */
-.dash-hero{display:flex;align-items:center;gap:1.25rem;background:var(--card);border:1px solid var(--border);border-radius:var(--rl);padding:1.4rem;box-shadow:var(--sh);margin-bottom:1.25rem;flex-wrap:wrap}
-.progress-ring{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.progress-ring-inner{width:52px;height:52px;border-radius:50%;background:var(--card);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:var(--accent)}
-.dash-hero-info{flex:1;min-width:180px}
-.dash-eyebrow{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px}
-.dash-title{font-family:'Lora',serif;font-size:16px}
-
-/* SPLIT LAYOUT (currículo público + chamada admin, unificados) */
-.split-layout{display:grid;grid-template-columns:270px 1fr;gap:1.25rem;align-items:start}
-@media(max-width:760px){.split-layout{grid-template-columns:1fr}}
-.split-side{position:sticky;top:calc(var(--topbar2) + 20px)}
-@media(max-width:760px){.split-side{position:static}}
-.split-side-label{font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;padding:10px 4px 4px}
-.split-side-label:first-child{padding-top:0}
-.lesson-list-btn{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:var(--r);border:1px solid var(--border);background:var(--card);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:12.5px;text-align:left;width:100%;margin-bottom:4px;transition:.15s}
-.lesson-list-btn:hover{background:var(--muted)}
-.lesson-list-btn.active{background:var(--al);border-color:var(--accent);color:var(--accent);font-weight:500}
-.lesson-status{width:20px;height:20px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;background:var(--muted);color:var(--text3)}
-.lesson-list-btn.done .lesson-status{background:var(--gl);color:var(--green)}
-.lesson-detail-card{background:var(--card);border:1px solid var(--border);border-radius:var(--rl);padding:1.5rem;box-shadow:var(--sh)}
-.lesson-eyebrow{font-size:11px;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
-.lesson-title{font-family:'Lora',serif;font-size:21px;font-weight:500}
-.lesson-meta-grid{display:flex;flex-direction:column;gap:.5rem;margin-top:1.1rem}
-.lesson-meta-item{background:var(--muted);border-radius:var(--r);padding:.7rem .9rem;font-size:13px;line-height:1.6}
-.lesson-meta-item b{color:var(--text)}
-
-/* MATERIAIS (linhas de arquivo, reaproveitado em vários lugares) */
-.mat-list{display:flex;flex-direction:column;gap:6px;margin-top:.75rem}
+/* CURRÍCULO (módulos/encontros) */
+.mod-card{background:var(--card);border:1px solid var(--border);border-radius:var(--rl);margin-bottom:10px;overflow:hidden;box-shadow:var(--sh);transition:background .2s}
+.mod-head{display:flex;align-items:center;gap:12px;padding:1rem 1.25rem;cursor:pointer;user-select:none;transition:.15s}
+.mod-head:hover{background:var(--muted)}
+.mod-num{width:34px;height:34px;border-radius:8px;background:var(--al);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:500;flex-shrink:0;font-family:'Lora',serif}
+.mod-body{border-top:1px solid var(--border)}
+.enc-item{border-bottom:1px solid var(--border)}
+.enc-item:last-child{border-bottom:none}
+.enc-head{display:flex;align-items:center;gap:10px;padding:.7rem 1.25rem;cursor:pointer;transition:.15s}
+.enc-head:hover{background:var(--muted)}
+.enc-num{width:26px;height:26px;border-radius:6px;background:var(--muted);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;color:var(--text2);flex-shrink:0}
+.mat-list{padding:.5rem 1.25rem .75rem 3.5rem;display:flex;flex-direction:column;gap:6px}
 .mat-row{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid var(--border)}
 .mat-row:last-of-type{border-bottom:none}
 
-/* ADMIN: CONTEÚDO (módulos + materiais unificados) */
+/* ADMIN MODULE EDITOR */
 .adm-mod-card{background:var(--card);border:1px solid var(--border);border-radius:var(--rl);margin-bottom:10px;overflow:hidden;box-shadow:var(--sh)}
 .adm-mod-head{display:flex;align-items:center;gap:10px;padding:.85rem 1.25rem;background:var(--al);cursor:pointer;transition:.15s}
 .adm-mod-head:hover{filter:brightness(.97)}
 .adm-mod-title{font-size:14px;font-weight:500;flex:1;color:var(--accent)}
-.enc-item{border-bottom:1px solid var(--border)}
-.enc-item:last-child{border-bottom:none}
-.adm-enc-row{display:flex;align-items:center;gap:10px;padding:.65rem 1.25rem;transition:.15s}
-.adm-enc-row:hover{background:var(--muted)}
+.adm-enc-row{display:flex;align-items:center;gap:10px;padding:.6rem 1.25rem;border-bottom:1px solid var(--border)}
+.adm-enc-row:last-child{border-bottom:none}
 .adm-enc-name{flex:1;font-size:13px}
 .adm-add-enc{display:flex;align-items:center;gap:8px;padding:.6rem 1.25rem;background:var(--muted)}
 .adm-actions{display:flex;gap:6px;align-items:center}
-.enc-body-inner{padding:.25rem 1.25rem 1rem 3.5rem}
+
+/* CHAMADA */
+.chamada-layout{display:grid;grid-template-columns:250px 1fr;gap:1.25rem;align-items:start}
+@media(max-width:660px){.chamada-layout{grid-template-columns:1fr}}
+.chamada-sidebar{position:sticky;top:calc(var(--topbar-h) + 1.5rem)}
+.enc-sel-group-label{font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;padding:8px 0 4px}
+.enc-sel-btn{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:var(--r);border:1px solid var(--border);background:var(--card);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;text-align:left;transition:.15s;width:100%;margin-bottom:4px}
+.enc-sel-btn:hover{background:var(--muted)}
+.enc-sel-btn.active{background:var(--al);border-color:var(--accent);color:var(--accent);font-weight:500}
+.enc-sel-n{width:24px;height:24px;border-radius:5px;background:var(--muted);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0}
+.enc-sel-btn.active .enc-sel-n{background:var(--accent);color:#fff}
+.enc-no-chamada{border-left:3px solid var(--amber)}
 
 /* PRESENÇA */
 .pres-list{display:flex;flex-direction:column;gap:8px}
@@ -225,17 +223,12 @@ select.fi{cursor:pointer}
 .modal-t{font-family:'Lora',serif;font-size:17px;font-weight:500;margin-bottom:1.25rem}
 .modal-f{display:flex;gap:8px;justify-content:flex-end;margin-top:1.25rem}
 .modal-lg{max-width:600px}
-.confirm-modal{max-width:360px;text-align:center}
-.confirm-icon{font-size:30px;margin-bottom:.5rem}
-.confirm-msg{font-size:13.5px;color:var(--text2);margin-bottom:0;line-height:1.6}
 
-/* EMPTY / ONBOARDING */
+/* EMPTY */
 .empty{text-align:center;padding:3rem 1rem;color:var(--text2);font-size:14px}
 .empty-i{font-size:36px;margin-bottom:.75rem;opacity:.35}
-.onboard-card{max-width:420px;margin:3rem auto;text-align:center;background:var(--card);border:1px solid var(--border);border-radius:var(--rl);padding:2.5rem 2rem;box-shadow:var(--sh)}
-.onboard-icon{font-size:38px;margin-bottom:1rem}
 
-/* AVISO CARD (público) */
+/* AVISO CARD */
 .aviso-card{background:var(--accent);color:#fff;border-radius:var(--rl);padding:1.5rem;margin-bottom:1.25rem;position:relative;overflow:hidden}
 .aviso-card::before{content:'📢';position:absolute;font-size:80px;opacity:.08;right:-10px;bottom:-10px}
 .aviso-card h3{font-family:'Lora',serif;font-size:18px;font-weight:500;margin-bottom:.75rem}
@@ -244,7 +237,7 @@ select.fi{cursor:pointer}
 .aviso-versiculo{background:rgba(255,255,255,.15);border-radius:var(--rs);padding:.6rem .9rem;font-size:13px;font-style:italic;margin-top:.75rem;line-height:1.5}
 .aviso-tarefa{background:rgba(255,255,255,.1);border-radius:var(--rs);padding:.6rem .9rem;font-size:13px;margin-top:.5rem}
 
-/* ORAÇÃO CARD */
+/* ORAÇÃO */
 .oracao-row{display:flex;align-items:flex-start;gap:10px;padding:.75rem 0;border-bottom:1px solid var(--border)}
 .oracao-row:last-child{border-bottom:none}
 .oracao-check{width:20px;height:20px;border-radius:5px;border:2px solid var(--border2);cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;transition:.15s;margin-top:2px}
@@ -262,6 +255,7 @@ select.fi{cursor:pointer}
 .hist-badge{width:22px;height:22px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600}
 
 /* SITUAÇÃO */
+.sit-btn{padding:5px 12px;border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;border:2px solid transparent;transition:.15s}
 .sit-ativo{background:var(--gl);color:var(--green)}
 .sit-recem{background:var(--al);color:var(--accent)}
 .sit-crescendo{background:var(--ambl);color:var(--amber)}
@@ -273,7 +267,7 @@ select.fi{cursor:pointer}
 .chart-bar{width:100%;border-radius:4px 4px 0 0;transition:height .5s cubic-bezier(.4,0,.2,1);min-height:4px}
 .chart-label{font-size:9px;color:var(--text3);text-align:center;white-space:nowrap;overflow:hidden;max-width:32px;text-overflow:ellipsis}
 
-/* GRUPO CARD (usado só dentro do modal, se precisar listar) */
+/* GRUPO SELECTOR (onboarding) */
 .grupo-card{background:var(--card);border:1px solid var(--border);border-radius:var(--rl);padding:1.25rem;box-shadow:var(--sh);cursor:pointer;transition:.2s;display:flex;align-items:center;gap:1rem;margin-bottom:10px}
 .grupo-card:hover{border-color:var(--accent);box-shadow:var(--sh2)}
 .grupo-icon{width:42px;height:42px;border-radius:10px;background:var(--al);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
@@ -284,8 +278,7 @@ select.fi{cursor:pointer}
 
 @media(max-width:520px){
   .page{padding:1rem}
-  .hero{padding:1.5rem 1rem}
-  .hero h1{font-size:19px}
+  .chamada-sidebar{position:static}
 }
 </style>
 </head>
@@ -314,28 +307,31 @@ select.fi{cursor:pointer}
   </div>
 </div>
 
+<div id="onboarding" class="hide">
+  <header class="onb-topbar">
+    <span style="font-size:18px;color:var(--accent)">✝</span>
+    <span class="brand">Discipulado</span>
+    <div style="flex:1"></div>
+    <span class="tuser" id="onboarding-topbar-user"></span>
+    <button class="btn btn-out btn-sm" id="onb-sair">Sair</button>
+  </header>
+  <div id="onboarding-content"></div>
+</div>
+
 <div id="app" class="hide">
-  <div class="shell">
-    <aside id="sidebar" class="sidebar">
-      <div class="sidebar-top">
-        <div class="brand-row"><span class="x">✝</span> Discipulado</div>
-        <div id="ws-slot"></div>
-      </div>
-      <nav id="sidebar-nav" class="sidebar-nav"></nav>
-      <div class="sidebar-bottom">
-        <div class="sidebar-user-email" id="sidebar-user-email"></div>
-        <button class="snav-item" id="dark-toggle"><span class="snav-ico" id="dark-ico">🌙</span><span id="dark-label">Modo escuro</span></button>
-        <button class="snav-item hide" id="btn-logout"><span class="snav-ico">↩</span> Sair</button>
-        <button class="snav-item hide" id="btn-login-link"><span class="snav-ico">🔑</span> Área do discipulador</button>
-      </div>
-    </aside>
+  <div class="app-shell">
     <div class="sidebar-backdrop" id="sidebar-backdrop"></div>
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand"><span class="x">✝</span><span>Discipulado</span></div>
+      <nav class="side-nav" id="side-nav"></nav>
+      <div class="side-foot" id="side-foot"></div>
+    </aside>
     <div class="main-col">
       <header class="topbar-slim">
-        <button class="mobile-menu-btn" id="mobile-menu-btn">☰</button>
-        <span class="page-title" id="page-title">Início</span>
+        <button class="hamburger" id="hamburger" aria-label="Abrir menu">☰</button>
+        <div id="topbar-title"></div>
         <div style="flex:1"></div>
-        <div id="page-actions" class="gap" style="gap:8px"></div>
+        <button class="dark-btn" id="dark-toggle" title="Modo escuro" aria-label="Alternar modo escuro">🌙</button>
       </header>
       <div id="content"></div>
     </div>
@@ -345,33 +341,14 @@ select.fi{cursor:pointer}
 <script>
 // ═══ ESTADO ═══
 let sb, session = null;
-let grupoAtual = null;   // {id, nome, descricao, user_id}
-let grupos = [];         // grupos do discipulador logado
+let grupoAtual = null; // {id, nome, user_id}
 let modulos = [], discipulandos = [], chamadas = [], avisos = [], oracoes = [];
 let viewAtual = '';
 let _chamadaAtual = new Map();
-let _encSel = null;        // encontro selecionado na Chamada (admin)
-let _pubEncSel = null;     // encontro selecionado no Currículo (público)
-let _conteudoMod = null;   // módulo expandido em Conteúdo (admin)
-let _conteudoEnc = null;   // encontro expandido em Conteúdo (admin)
+let _encSel = null;
+let _modAberto = null, _encAberto = null;
+let _estrutMod = null;
 let _chamadaSuja = false;
-
-const PUB_NAV = [
-  {id:'inicio', label:'Início', icon:'🏠'},
-  {id:'encontros', label:'Encontros', icon:'📖'},
-  {id:'frequencia', label:'Frequência', icon:'📊'},
-];
-const ADMIN_NAV = [
-  {id:'chamada', label:'Chamada', icon:'✅'},
-  {id:'relatorios', label:'Relatórios', icon:'📈'},
-  {id:'conteudo', label:'Conteúdo', icon:'📚'},
-  {id:'discipulandos', label:'Discipulandos', icon:'👥'},
-  {id:'oracoes-adm', label:'Oração', icon:'🙏'},
-  {id:'avisos-adm', label:'Avisos', icon:'📢'},
-];
-const PUB_VIEWS = PUB_NAV.map(n=>n.id);
-const ADMIN_VIEWS = ADMIN_NAV.map(n=>n.id);
-const TITLES = {inicio:'Início', encontros:'Encontros', frequencia:'Minha frequência', chamada:'Chamada', relatorios:'Relatórios', conteudo:'Conteúdo', discipulandos:'Discipulandos', 'oracoes-adm':'Pedidos de oração', 'avisos-adm':'Avisos'};
 
 const CORES = [
   ['#EAE8F5','#4A3F8C'],['#EAF3DE','#3B6D11'],['#FAECE7','#993C1D'],
@@ -387,80 +364,53 @@ const SITUACOES = {
   precisa_atencao: {label:'Precisa de atenção', cls:'sit-atencao'},
 };
 
+const NAV_PUBLICO = [
+  {id:'inicio', ic:'🏠', label:'Painel'},
+  {id:'materiais', ic:'📚', label:'Conteúdo do Curso'},
+  {id:'frequencia', ic:'📈', label:'Frequência'},
+];
+const NAV_ADMIN = [
+  {id:'chamada', ic:'✅', label:'Chamada'},
+  {id:'relatorios', ic:'📊', label:'Relatórios'},
+  {id:'materiais-adm', ic:'📁', label:'Materiais'},
+  {id:'estrutura', ic:'🧩', label:'Módulos'},
+  {id:'discipulandos', ic:'👥', label:'Discipulandos'},
+  {id:'oracoes-adm', ic:'🙏', label:'Oração'},
+  {id:'avisos-adm', ic:'📢', label:'Avisos'},
+];
+
 function av(nome, idx, sz=36) {
   const [bg,fg] = CORES[idx % CORES.length];
   const ini = (nome||'?').split(' ').map(p=>p[0]).slice(0,2).join('').toUpperCase();
   return `<div class="av" style="width:${sz}px;height:${sz}px;background:${bg};color:${fg};flex-shrink:0">${ini}</div>`;
 }
 
+function el(id){ return document.getElementById(id) }
+function show(id){ el(id)?.classList.remove('hide') }
+function hide(id){ el(id)?.classList.add('hide') }
+
 // ═══ DARK MODE ═══
+const darkBtn = el('dark-toggle');
 function applyTheme(dark){
   document.documentElement.setAttribute('data-theme', dark ? 'dark' : '');
-  const ico=el('dark-ico'), lbl=el('dark-label');
-  if(ico) ico.textContent = dark ? '☀️' : '🌙';
-  if(lbl) lbl.textContent = dark ? 'Modo claro' : 'Modo escuro';
+  darkBtn.textContent = dark ? '☀️' : '🌙';
   localStorage.setItem('theme', dark ? 'dark' : 'light');
 }
+darkBtn.addEventListener('click', () => {
+  applyTheme(document.documentElement.getAttribute('data-theme') !== 'dark');
+});
+applyTheme(localStorage.getItem('theme') === 'dark');
 
-// ═══ HELPERS ═══
-function show(id){ document.getElementById(id)?.classList.remove('hide') }
-function hide(id){ document.getElementById(id)?.classList.add('hide') }
-function el(id){ return document.getElementById(id) }
-function todosEncontros(){ return modulos.flatMap(m => m.encontros.map(e=>({...e,mod_titulo:m.titulo,mod_numero:m.numero,mod_id:m.id}))); }
-
-function getFreq(discId) {
-  const enc = todosEncontros().filter(e=>e.realizado);
-  const total = enc.length;
-  if(!total) return {pct:0,pres:0,total:0};
-  const pres = enc.filter(e=>chamadas.some(c=>c.encontro_id===e.id&&c.discipulando_id===discId&&c.presente)).length;
-  return {pct:Math.round(pres/total*100),pres,total};
-}
-
-function fmtData(d){ if(!d)return''; return new Date(d+'T12:00:00').toLocaleDateString('pt-BR'); }
-function fmtTam(kb){ if(!kb)return''; return kb>=1024?(kb/1024).toFixed(1)+' MB':kb+' KB'; }
-
-function notif(msg, tipo='ok') {
-  const n = document.createElement('div');
-  n.className = `notif notif-${tipo}`;
-  n.style.cssText='position:fixed;top:16px;right:1rem;z-index:400;box-shadow:var(--sh2);max-width:320px;animation:sup .2s ease';
-  n.textContent = (tipo==='ok'?'✓ ':'✗ ') + msg;
-  document.body.appendChild(n);
-  setTimeout(()=>n.remove(), 3500);
-}
-
-function sanitizePath(name) {
-  return name.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9._-]/g,'_');
-}
-
-function encontroTemChamada(encId) {
-  return chamadas.some(c => c.encontro_id === encId);
-}
-
-// Modal de confirmação customizado — substitui o confirm() nativo do navegador
-// para manter consistência visual (princípio de consistência/padrões da IHC).
-function confirmDialog(msg, opts={}) {
-  return new Promise(resolve => {
-    const ow=document.createElement('div'); ow.className='overlay';
-    ow.innerHTML=`<div class="modal confirm-modal">
-      <div class="confirm-icon">${opts.danger?'⚠️':'❓'}</div>
-      <div class="confirm-msg">${msg}</div>
-      <div class="modal-f" style="justify-content:center">
-        <button class="btn btn-ghost" id="cf-no">Cancelar</button>
-        <button class="btn ${opts.danger?'btn-danger':'btn-acc'}" id="cf-yes">${opts.confirmLabel||'Confirmar'}</button>
-      </div></div>`;
-    document.body.appendChild(ow);
-    const close=(val)=>{ow.remove();resolve(val);};
-    ow.addEventListener('click',e=>e.target===ow&&close(false));
-    ow.querySelector('#cf-no').onclick=()=>close(false);
-    ow.querySelector('#cf-yes').onclick=()=>close(true);
-  });
-}
+// ═══ SIDEBAR MOBILE ═══
+function closeSidebarMobile(){ el('sidebar')?.classList.remove('open'); el('sidebar-backdrop')?.classList.remove('show'); }
+el('hamburger').addEventListener('click', () => {
+  el('sidebar').classList.toggle('open');
+  el('sidebar-backdrop').classList.toggle('show');
+});
+el('sidebar-backdrop').addEventListener('click', closeSidebarMobile);
 
 // ═══ INIT ═══
 window.addEventListener('DOMContentLoaded', async () => {
-  applyTheme(localStorage.getItem('theme') === 'dark');
-  el('dark-toggle').addEventListener('click', () => applyTheme(document.documentElement.getAttribute('data-theme') !== 'dark'));
-
   if (!SUPABASE_URL || SUPABASE_URL.includes('COLE') || !SUPABASE_KEY || SUPABASE_KEY.includes('COLE')) {
     show('setup'); hide('loading'); return;
   }
@@ -468,25 +418,14 @@ window.addEventListener('DOMContentLoaded', async () => {
     sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
     const { data } = await sb.auth.getSession();
     session = data.session;
-    sb.auth.onAuthStateChange((event, s) => {
-      session = s;
-      if (event === 'SIGNED_OUT') { grupoAtual=null; grupos=[]; carregarDadosPublicos().then(renderApp); }
-    });
-    if (session) {
-      grupos = await carregarGrupoDoUser();
-      grupoAtual = grupos[0] || null;
-    }
+    sb.auth.onAuthStateChange((_e, s) => { session = s; if(!s) { grupoAtual=null; } renderApp(); });
     await carregarDadosPublicos();
-    hide('loading'); show('app');
+    hide('loading');
     renderApp();
   } catch(e) {
     el('loading').innerHTML = `<div style="color:var(--red);font-size:32px">!</div><p style="color:var(--red);max-width:300px;text-align:center">Erro de conexão.<br>${e.message}</p>`;
   }
-
-  el('mobile-menu-btn').addEventListener('click', ()=>{ el('sidebar').classList.add('open'); el('sidebar-backdrop').classList.add('show'); });
-  el('sidebar-backdrop').addEventListener('click', closeMobileSidebar);
 });
-function closeMobileSidebar(){ el('sidebar').classList.remove('open'); el('sidebar-backdrop').classList.remove('show'); }
 
 // ═══ DADOS ═══
 async function carregarDadosPublicos() {
@@ -496,7 +435,8 @@ async function carregarDadosPublicos() {
          : sb.from('modulos').select('*, encontros(*, materiais(*))').order('numero'),
     gid ? sb.from('discipulandos').select('*').eq('ativo', true).eq('grupo_id', gid).order('nome')
          : sb.from('discipulandos').select('*').eq('ativo', true).order('nome'),
-    sb.from('chamadas').select('*'),
+    gid ? sb.from('chamadas').select('*')
+         : sb.from('chamadas').select('*'),
     gid ? sb.from('avisos').select('*').eq('grupo_id', gid).eq('ativo', true).order('criado_em', {ascending:false})
          : sb.from('avisos').select('*').eq('ativo', true).order('criado_em', {ascending:false}),
     gid ? sb.from('oracoes').select('*').eq('grupo_id', gid).order('criado_em', {ascending:false})
@@ -519,81 +459,154 @@ async function carregarGrupoDoUser() {
   return data || [];
 }
 
-// ═══ APP SHELL ═══
+// ═══ HELPERS ═══
+function todosEncontros(){ return modulos.flatMap(m => m.encontros.map(e=>({...e,mod_titulo:m.titulo,mod_numero:m.numero,mod_id:m.id}))); }
+
+function getFreq(discId) {
+  const enc = todosEncontros().filter(e=>e.realizado);
+  const total = enc.length;
+  if(!total) return {pct:0,pres:0,total:0};
+  const pres = enc.filter(e=>chamadas.some(c=>c.encontro_id===e.id&&c.discipulando_id===discId&&c.presente)).length;
+  return {pct:Math.round(pres/total*100),pres,total};
+}
+
+function fmtData(d){ if(!d)return''; return new Date(d+'T12:00:00').toLocaleDateString('pt-BR'); }
+function fmtTam(kb){ if(!kb)return''; return kb>=1024?(kb/1024).toFixed(1)+' MB':kb+' KB'; }
+
+function notif(msg, tipo='ok') {
+  const n = document.createElement('div');
+  n.className = `notif notif-${tipo}`;
+  n.style.cssText='position:fixed;top:70px;right:1rem;z-index:400;box-shadow:var(--sh2);max-width:320px;animation:sup .2s ease';
+  n.textContent = (tipo==='ok'?'✓ ':' ✗ ') + msg;
+  document.body.appendChild(n);
+  setTimeout(()=>n.remove(), 3500);
+}
+
+function sanitizePath(name) {
+  return name.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9._-]/g,'_');
+}
+
+function encontroTemChamada(encId) {
+  return chamadas.some(c => c.encontro_id === encId);
+}
+
+// ═══ APP (roteador principal de estados) ═══
+// Estados mutuamente exclusivos e sem sobreposição: login-screen / onboarding / app(público) / app(admin)
 function renderApp() {
-  el('sidebar-user-email').textContent = session ? session.user.email : '';
-  el('btn-logout').classList.toggle('hide', !session);
-  el('btn-login-link').classList.toggle('hide', !!session);
-  renderWorkspaceArea();
+  hide('login-screen');
 
-  if (session) {
-    if (!ADMIN_VIEWS.includes(viewAtual)) viewAtual = 'chamada';
-    renderSidebarNav(ADMIN_NAV);
-  } else {
-    if (!PUB_VIEWS.includes(viewAtual)) viewAtual = 'inicio';
-    renderSidebarNav(PUB_NAV);
-  }
-  renderView(viewAtual);
-
-  el('btn-logout').onclick = async () => { grupoAtual=null; grupos=[]; await sb.auth.signOut(); };
-  el('btn-login-link').onclick = () => { closeMobileSidebar(); hide('app'); show('login-screen'); setTimeout(()=>el('login-email').focus(),50); };
-}
-
-function renderWorkspaceArea() {
-  const slot = el('ws-slot');
-  if (!session) { slot.innerHTML=''; return; }
-  let html='';
-  if (grupos.length > 1) {
-    html += `<div class="workspace-switch"><span class="ws-icon">🏠</span><select id="ws-select">${grupos.map(g=>`<option value="${g.id}"${grupoAtual&&g.id===grupoAtual.id?' selected':''}>${g.nome}</option>`).join('')}</select></div>`;
-  } else if (grupos.length === 1) {
-    html += `<div class="workspace-switch"><span class="ws-icon">🏠</span><span class="workspace-name">${grupos[0].nome}</span></div>`;
-  }
-  html += `<button class="btn btn-out btn-sm btn-full" id="btn-new-group" style="margin-top:6px">+ Novo grupo</button>`;
-  slot.innerHTML = html;
-  const sel = el('ws-select');
-  if (sel) sel.addEventListener('change', async (e) => {
-    const novo = grupos.find(g=>g.id===e.target.value); if(!novo) return;
-    grupoAtual = novo;
-    await carregarDadosPublicos();
+  if (!session) {
+    hide('onboarding');
+    show('app');
+    setupPublicShell();
+    if (!['inicio','materiais','frequencia'].includes(viewAtual)) viewAtual = 'inicio';
     renderView(viewAtual);
-    notif(`Grupo "${novo.nome}" selecionado.`);
-  });
-  el('btn-new-group').addEventListener('click', ()=>abrirModalGrupo());
+    return;
+  }
+
+  // Logado, mas ainda sem grupo selecionado → tela própria de onboarding, SEM sidebar/nav do app
+  if (!grupoAtual) {
+    hide('app');
+    el('onboarding-topbar-user').textContent = session.user.email;
+    show('onboarding');
+    renderGrupoSelector();
+    return;
+  }
+
+  // Logado + grupo selecionado → painel do discipulador
+  hide('onboarding');
+  show('app');
+  setupAdminShell();
+  if (!['chamada','relatorios','materiais-adm','discipulandos','estrutura','oracoes-adm','avisos-adm'].includes(viewAtual)) viewAtual = 'chamada';
+  renderView(viewAtual);
 }
 
-function renderSidebarNav(items) {
-  const nav = el('sidebar-nav');
-  nav.innerHTML = items.map(it=>`<button class="snav-item${viewAtual===it.id?' active':''}" data-nav="${it.id}"><span class="snav-ico">${it.icon}</span>${it.label}</button>`).join('');
-  nav.querySelectorAll('[data-nav]').forEach(btn=>{
-    btn.addEventListener('click', async ()=>{
-      if (viewAtual==='chamada' && _chamadaSuja) {
-        const ok = await confirmDialog('Você tem alterações não salvas na chamada. Deseja sair mesmo assim?');
-        if(!ok) return;
+function setupPublicShell() {
+  renderSideNav(NAV_PUBLICO);
+  el('side-foot').innerHTML = `<button class="btn btn-ghost btn-full" id="btn-area-disc" style="justify-content:flex-start">🔑 Área do Discipulador</button>`;
+  el('side-foot').querySelector('#btn-area-disc').onclick = () => { hide('app'); show('login-screen'); };
+  el('topbar-title').innerHTML = `<span class="tbadge">Área Pública</span>`;
+}
+
+function setupAdminShell() {
+  renderSideNav(NAV_ADMIN);
+  el('side-foot').innerHTML = `
+    <div class="group-name" id="btn-trocar-grupo" title="Trocar de grupo">🏠 <span style="overflow:hidden;text-overflow:ellipsis">${grupoAtual.nome}</span> ↺</div>
+    <div class="tuser">${session.user.email}</div>
+    <button class="btn btn-out btn-sm btn-full" id="btn-sair">Sair</button>`;
+  el('side-foot').querySelector('#btn-trocar-grupo').onclick = () => { grupoAtual=null; renderApp(); };
+  el('side-foot').querySelector('#btn-sair').onclick = () => { grupoAtual=null; sb.auth.signOut(); };
+  el('topbar-title').innerHTML = `<span class="tbadge" style="background:var(--gl);color:var(--green)">Painel do Discipulador</span>`;
+}
+
+function renderSideNav(items) {
+  const nav = el('side-nav');
+  nav.innerHTML = '';
+  items.forEach(it => {
+    const btn = document.createElement('button');
+    btn.className = 'side-item';
+    btn.dataset.viewid = it.id;
+    btn.innerHTML = `<span class="ic">${it.ic}</span><span>${it.label}</span>`;
+    btn.addEventListener('click', () => {
+      if (_chamadaSuja && viewAtual==='chamada' && it.id!=='chamada') {
+        if(!confirm('Você tem alterações não salvas na chamada. Deseja sair mesmo assim?')) return;
         _chamadaSuja=false; removerUnsavedBar();
       }
-      closeMobileSidebar();
-      renderView(btn.dataset.nav);
+      viewAtual = it.id;
+      highlightSideNav();
+      renderView(viewAtual);
+      closeSidebarMobile();
     });
+    nav.appendChild(btn);
   });
+  highlightSideNav();
+}
+function highlightSideNav(){
+  document.querySelectorAll('.side-item').forEach(b=>b.classList.toggle('active', b.dataset.viewid===viewAtual));
 }
 
 el('login-btn').onclick = async () => {
   const email=el('login-email').value.trim(), senha=el('login-senha').value;
-  el('login-err').classList.add('hide'); el('login-btn').textContent='Entrando...'; el('login-btn').disabled=true;
+  el('login-err').classList.add('hide'); el('login-btn').textContent='Entrando...';
   const {error} = await sb.auth.signInWithPassword({email,password:senha});
-  el('login-btn').textContent='Entrar'; el('login-btn').disabled=false;
-  if(error){ el('login-err').textContent='E-mail ou senha incorretos.'; el('login-err').classList.remove('hide'); return; }
-  hide('login-screen'); show('app');
-  grupos = await carregarGrupoDoUser();
-  grupoAtual = grupos[0] || null;
-  viewAtual = 'chamada';
-  await carregarDadosPublicos();
-  renderApp();
+  el('login-btn').textContent='Entrar';
+  if(error){el('login-err').textContent='E-mail ou senha incorretos.';el('login-err').classList.remove('hide');}
+  else { hide('login-screen'); viewAtual='chamada'; await carregarDadosPublicos(); renderApp(); }
 };
-el('login-voltar').onclick=()=>{hide('login-screen');show('app');};
+el('login-voltar').onclick=()=>{ hide('login-screen'); renderApp(); };
 el('login-senha').addEventListener('keydown',e=>e.key==='Enter'&&el('login-btn').click());
+el('onb-sair').onclick = () => { grupoAtual=null; sb.auth.signOut(); };
 
-// ═══ NOVO GRUPO (modal usado tanto pela sidebar quanto pelo onboarding) ═══
+// ═══ SELETOR DE GRUPO (onboarding) ═══
+async function renderGrupoSelector() {
+  const c = el('onboarding-content');
+  c.innerHTML = `<div class="page" style="max-width:640px"><div class="page-header"><div><h1>Selecione seu grupo</h1><p>Cada grupo tem seu próprio currículo, participantes e chamada.</p></div><button class="btn btn-acc btn-sm" id="btn-novo-grupo">+ Novo grupo</button></div><div id="grupos-lista"><div class="spin" style="display:block;text-align:center;padding:2rem;font-size:24px">✝</div></div></div>`;
+
+  const grupos = await carregarGrupoDoUser();
+  const lista = el('grupos-lista');
+
+  if (!grupos.length) {
+    lista.innerHTML = `<div class="empty"><div class="empty-i">🏠</div><p>Você ainda não tem nenhum grupo.<br>Clique em <b>+ Novo grupo</b> para criar.</p></div>`;
+  } else {
+    lista.innerHTML = '';
+    grupos.forEach(g => {
+      const card = document.createElement('div');
+      card.className = 'grupo-card';
+      card.innerHTML = `<div class="grupo-icon">🙏</div><div style="flex:1"><div style="font-size:15px;font-weight:500">${g.nome}</div>${g.descricao?`<div style="font-size:12px;color:var(--text2)">${g.descricao}</div>`:''}</div><span style="font-size:12px;color:var(--text3)">→</span>`;
+      card.addEventListener('click', async () => {
+        grupoAtual = g;
+        await carregarDadosPublicos();
+        _encSel = null; _chamadaAtual = new Map();
+        viewAtual = 'chamada';
+        renderApp();
+      });
+      lista.appendChild(card);
+    });
+  }
+
+  el('btn-novo-grupo').addEventListener('click', () => abrirModalGrupo());
+}
+
 function abrirModalGrupo() {
   const ow = document.createElement('div');
   ow.className = 'overlay';
@@ -610,68 +623,51 @@ function abrirModalGrupo() {
   ow.querySelector('#g-save').onclick = async () => {
     const nome = ow.querySelector('#g-nome').value.trim();
     if(!nome){ow.querySelector('#g-err').textContent='Informe o nome.';ow.querySelector('#g-err').classList.remove('hide');return;}
-    ow.querySelector('#g-save').textContent='Criando...'; ow.querySelector('#g-save').disabled=true;
+    ow.querySelector('#g-save').textContent='Criando...';
     const {data,error} = await sb.from('grupos').insert({nome, descricao:ow.querySelector('#g-desc').value.trim()||null, user_id:session.user.id}).select().single();
-    if(error){ow.querySelector('#g-err').textContent=error.message;ow.querySelector('#g-err').classList.remove('hide');ow.querySelector('#g-save').textContent='Criar grupo';ow.querySelector('#g-save').disabled=false;return;}
-    grupos.push(data);
+    if(error){ow.querySelector('#g-err').textContent=error.message;ow.querySelector('#g-err').classList.remove('hide');ow.querySelector('#g-save').textContent='Criar grupo';return;}
     grupoAtual = data;
     ow.remove();
     await carregarDadosPublicos();
-    renderWorkspaceArea();
-    renderView(viewAtual);
-    notif('Grupo criado!');
+    viewAtual = 'chamada';
+    renderApp();
   };
 }
 
-// ═══ VIEWS (dispatcher) ═══
+// ═══ VIEWS ═══
 function renderView(v) {
   viewAtual = v;
   const c = el('content');
   c.innerHTML = '';
-  el('page-actions').innerHTML = '';
-  el('page-title').textContent = TITLES[v] || '';
   removerUnsavedBar();
-  document.querySelectorAll('#sidebar-nav .snav-item[data-nav]').forEach(b=>b.classList.toggle('active', b.dataset.nav===v));
-
-  if (session && !grupoAtual) { renderOnboarding(c); return; }
-
   if(v==='inicio')        renderInicio(c);
-  if(v==='encontros')     renderEncontrosPublic(c);
+  if(v==='materiais')     renderMateriais(c,false);
   if(v==='frequencia')    renderFreqPublica(c);
   if(v==='chamada')       renderChamada(c);
   if(v==='relatorios')    renderRelatorios(c);
-  if(v==='conteudo')      renderConteudoAdm(c);
+  if(v==='materiais-adm') renderMateriais(c,true);
   if(v==='discipulandos') renderDiscipulandos(c);
+  if(v==='estrutura')     renderEstrutura(c);
   if(v==='oracoes-adm')   renderOracoesAdm(c);
   if(v==='avisos-adm')    renderAvisosAdm(c);
 }
 
-function renderOnboarding(c) {
-  const wrap=document.createElement('div'); wrap.className='page';
-  wrap.innerHTML=`<div class="onboard-card"><div class="onboard-icon">🏠</div><div style="font-family:'Lora',serif;font-size:18px;margin-bottom:.5rem">Crie seu primeiro grupo</div><p style="font-size:13px;color:var(--text2);margin-bottom:1.25rem">Um grupo reúne os módulos, discipulandos e a chamada de um discipulado. Comece criando o seu para liberar o restante do painel.</p><button class="btn btn-acc" id="btn-onboard-criar">+ Criar grupo</button></div>`;
-  c.appendChild(wrap);
-  el('btn-onboard-criar').addEventListener('click',()=>abrirModalGrupo());
-}
-
-// ─── INÍCIO PÚBLICO (dashboard) ───
+// ─── INÍCIO (painel público) ───
 function renderInicio(c) {
-  const wrap = document.createElement('div'); wrap.className = 'page';
-  wrap.innerHTML = `<div class="hero"><h1>Discipulado</h1><p>${grupoAtual?grupoAtual.nome:'Bem-vindo(a) ao grupo'}</p></div>`;
+  const wrap = document.createElement('div');
+  wrap.className = 'page';
+  wrap.innerHTML = `<div class="page-header"><div><h1>Painel</h1><p>Avisos e pedidos de oração do grupo</p></div></div>`;
 
-  const enc = todosEncontros();
-  const total = enc.length;
-  const feitos = enc.filter(e=>e.realizado).length;
-  const pct = total ? Math.round(feitos/total*100) : 0;
-  const proximo = enc.find(e=>!e.realizado);
+  const real = todosEncontros().filter(e=>e.realizado).length;
+  const totalEnc = todosEncontros().length;
+  const freqMedia = discipulandos.length ? Math.round(discipulandos.reduce((s,d)=>s+getFreq(d.id).pct,0)/discipulandos.length) : 0;
 
-  if (total) {
-    const heroCard = document.createElement('div'); heroCard.className='dash-hero';
-    heroCard.innerHTML = `<div class="progress-ring" style="background:conic-gradient(var(--accent) ${pct*3.6}deg, var(--muted) 0)"><div class="progress-ring-inner">${pct}%</div></div>
-      <div class="dash-hero-info"><div class="dash-eyebrow">Progresso do currículo</div>
-      <div class="dash-title">${feitos} de ${total} encontros realizados</div>
-      ${proximo?`<button class="btn btn-acc btn-sm" style="margin-top:8px" id="btn-continuar">${feitos?'Continuar':'Começar'}: ${proximo.titulo} →</button>`:'<div style="font-size:12.5px;color:var(--text2);margin-top:4px">Currículo concluído! 🎉</div>'}</div>`;
-    wrap.appendChild(heroCard);
-  }
+  const stats = document.createElement('div'); stats.className = 'stats';
+  stats.innerHTML = `
+    <div class="stat"><div class="stat-l">Participantes</div><div class="stat-v">${discipulandos.length}</div></div>
+    <div class="stat"><div class="stat-l">Encontros</div><div class="stat-v">${real}</div><div class="stat-s">de ${totalEnc}</div></div>
+    <div class="stat"><div class="stat-l">Frequência média</div><div class="stat-v">${freqMedia}%</div></div>`;
+  wrap.appendChild(stats);
 
   const avisosAtivos = avisos.filter(a=>a.ativo);
   if (avisosAtivos.length) {
@@ -690,90 +686,110 @@ function renderInicio(c) {
 
   const ors = oracoes.filter(o=>!o.respondido).slice(0,5);
   if (ors.length) {
-    const box = document.createElement('div'); box.className = 'box';
+    const box = document.createElement('div');
+    box.className = 'box';
     box.innerHTML = `<div class="sh" style="margin-bottom:.75rem"><span class="sh-t">🙏 Pedidos de oração</span></div>`;
     ors.forEach(o => {
-      const row = document.createElement('div'); row.className = 'oracao-row';
+      const row = document.createElement('div');
+      row.className = 'oracao-row';
       row.innerHTML = `<div class="oracao-txt">${o.pedido}</div>`;
       box.appendChild(row);
     });
     wrap.appendChild(box);
   }
 
-  if (!total && !avisosAtivos.length && !ors.length) {
-    wrap.innerHTML += `<div class="empty"><div class="empty-i">✝</div><p>Nenhum conteúdo publicado ainda.</p></div>`;
+  if (!avisosAtivos.length && !ors.length) {
+    const empty = document.createElement('div'); empty.className='empty';
+    empty.innerHTML = `<div class="empty-i">✝</div><p>Nenhum aviso ou pedido de oração no momento.</p>`;
+    wrap.appendChild(empty);
   }
 
   c.appendChild(wrap);
-  const btnCont = el('btn-continuar');
-  if (btnCont) btnCont.addEventListener('click', ()=>{ _pubEncSel = proximo.id; document.querySelector('#sidebar-nav [data-nav="encontros"]')?.click(); });
 }
 
-// ─── ENCONTROS PÚBLICO (currículo estilo curso) ───
-function renderEncontrosPublic(c) {
-  const enc = todosEncontros();
-  if (!enc.length) { c.appendChild(Object.assign(document.createElement('div'),{className:'page',innerHTML:`<div class="empty"><div class="empty-i">📖</div><p>Nenhum encontro cadastrado ainda.</p></div>`})); return; }
-  if (!_pubEncSel || !enc.find(e=>e.id===_pubEncSel)) _pubEncSel = (enc.find(e=>!e.realizado) || enc[0]).id;
+// ─── CONTEÚDO DO CURSO (módulos/encontros/materiais) ───
+function renderMateriais(c, isAdmin) {
+  const wrap = document.createElement('div'); wrap.className='page';
+  wrap.innerHTML = `<div class="page-header"><div><h1>${isAdmin?'Materiais':'Conteúdo do Curso'}</h1><p>${isAdmin?'Adicione arquivos aos encontros de cada módulo':'Módulos, encontros e materiais para baixar'}</p></div></div>`;
 
-  const wrap = document.createElement('div'); wrap.className = 'page';
-  const layout = document.createElement('div'); layout.className = 'split-layout';
-
-  const side = document.createElement('div'); side.className = 'split-side';
-  let sHtml = '';
-  modulos.forEach(mod=>{
-    if (!mod.encontros.length) return;
-    sHtml += `<div class="split-side-label">${mod.numero}. ${mod.titulo}</div>`;
-    mod.encontros.forEach(e=>{
-      sHtml += `<button class="lesson-list-btn${e.id===_pubEncSel?' active':''}${e.realizado?' done':''}" data-eid="${e.id}"><span class="lesson-status">${e.realizado?'✓':e.numero}</span><span>${e.titulo}</span></button>`;
-    });
-  });
-  side.innerHTML = sHtml;
-  side.querySelectorAll('[data-eid]').forEach(btn=>btn.addEventListener('click',()=>{ _pubEncSel=btn.dataset.eid; renderView('encontros'); }));
-  layout.appendChild(side);
-
-  const main = document.createElement('div');
-  const encAtual = enc.find(e=>e.id===_pubEncSel);
-  if (encAtual) {
-    const card = document.createElement('div'); card.className='lesson-detail-card';
-    let metaHtml='';
-    if(encAtual.tema) metaHtml+=`<div class="lesson-meta-item">📖 <b>Tema:</b> ${encAtual.tema}</div>`;
-    if(encAtual.versiculo) metaHtml+=`<div class="lesson-meta-item">✝ <b>Versículo:</b> <em>${encAtual.versiculo}</em></div>`;
-    if(encAtual.tarefa) metaHtml+=`<div class="lesson-meta-item">✏️ <b>Tarefa da semana:</b> ${encAtual.tarefa}</div>`;
-    card.innerHTML = `<div class="lesson-eyebrow">${encAtual.mod_titulo} · Encontro ${encAtual.numero}</div>
-      <div class="lesson-title">${encAtual.titulo}</div>
-      ${encAtual.data?`<div style="font-size:12px;color:var(--text3);margin-top:4px">${fmtData(encAtual.data)}</div>`:''}
-      ${metaHtml?`<div class="lesson-meta-grid">${metaHtml}</div>`:''}`;
-    const matWrap = document.createElement('div'); matWrap.style.marginTop='1.1rem';
-    matWrap.innerHTML = `<div style="font-size:12px;font-weight:500;color:var(--text2);margin-bottom:.4rem">Materiais</div>`;
-    if (!encAtual.materiais.length) {
-      matWrap.innerHTML += `<p style="font-size:12.5px;color:var(--text3)">Nenhum material disponível para este encontro.</p>`;
-    } else {
-      const ml = document.createElement('div'); ml.className='mat-list';
-      encAtual.materiais.forEach(mat=>{
-        const ico = mat.tipo==='PDF'?'📄':mat.tipo==='PPTX'?'📊':mat.tipo==='VIDEO'?'🎬':'📎';
-        const row = document.createElement('div'); row.className='mat-row';
-        row.innerHTML = `<span style="font-size:15px">${ico}</span><div style="flex:1"><div style="font-size:13px">${mat.nome}</div>${mat.tamanho_kb?`<div style="font-size:11px;color:var(--text3)">${mat.tipo}·${fmtTam(mat.tamanho_kb)}</div>`:''}</div><a href="${mat.url}" target="_blank" class="btn btn-out btn-sm">↓ Baixar</a>`;
-        ml.appendChild(row);
-      });
-      matWrap.appendChild(ml);
-    }
-    card.appendChild(matWrap);
-    main.appendChild(card);
+  if(!modulos.length){
+    const e=document.createElement('div'); e.className='empty';
+    e.innerHTML=`<div class="empty-i">📂</div><p>Nenhum material disponível.</p>`;
+    wrap.appendChild(e);
   }
-  layout.appendChild(main);
-  wrap.appendChild(layout);
+
+  modulos.forEach(mod=>{
+    const card=document.createElement('div'); card.className='mod-card';
+    const enc_count=mod.encontros.length;
+    const realizadosMod=mod.encontros.filter(e=>e.realizado).length;
+    const pctMod=enc_count?Math.round(realizadosMod/enc_count*100):0;
+    card.innerHTML=`<div class="mod-head"><div class="mod-num">${mod.numero}</div><div style="flex:1"><div style="font-size:14px;font-weight:500">${mod.titulo}</div>${mod.descricao?`<div style="font-size:12px;color:var(--text3)">${mod.descricao}</div>`:''}</div><span class="badge ${pctMod===100?'bg-green':'bg-acc'}">${pctMod}%</span><span class="badge bg-gray">${enc_count} enc.</span><span style="font-size:11px;color:var(--text3);margin-left:4px">${_modAberto===mod.id?'▲':'▼'}</span></div>`;
+    if(_modAberto===mod.id){
+      const body=document.createElement('div'); body.className='mod-body';
+      mod.encontros.forEach(enc=>{
+        const eitem=document.createElement('div'); eitem.className='enc-item';
+        eitem.innerHTML=`<div class="enc-head"><div class="enc-num">${enc.numero}</div><div style="flex:1"><div style="font-size:13px">${enc.titulo}</div>${enc.data?`<div style="font-size:11px;color:var(--text3)">${fmtData(enc.data)}</div>`:''}</div><span class="badge ${enc.realizado?'bg-green':'bg-gray'}">${enc.realizado?'Realizado':'Agendado'}</span><span style="font-size:11px;color:var(--text3);margin-left:8px">${_encAberto===enc.id?'▲':'▼'}</span></div>`;
+        if(_encAberto===enc.id){
+          const ml=document.createElement('div'); ml.className='mat-list';
+          if(enc.versiculo||enc.tema||enc.tarefa){
+            const info=document.createElement('div'); info.style.cssText='background:var(--al);border-radius:var(--rs);padding:.6rem .9rem;margin-bottom:.5rem;font-size:12px;line-height:1.6';
+            if(enc.tema) info.innerHTML+=`<div>📖 <b>Tema:</b> ${enc.tema}</div>`;
+            if(enc.versiculo) info.innerHTML+=`<div>✝ <b>Versículo:</b> <em>${enc.versiculo}</em></div>`;
+            if(enc.tarefa) info.innerHTML+=`<div>✏️ <b>Tarefa:</b> ${enc.tarefa}</div>`;
+            ml.appendChild(info);
+          }
+          if(!enc.materiais.length) ml.innerHTML+=`<p style="font-size:12px;color:var(--text3)">Nenhum material.</p>`;
+          enc.materiais.forEach(mat=>{
+            const ico=mat.tipo==='PDF'?'📄':mat.tipo==='PPTX'?'📊':mat.tipo==='VIDEO'?'🎬':'📎';
+            const row=document.createElement('div'); row.className='mat-row';
+            row.innerHTML=`<span style="font-size:15px">${ico}</span><div style="flex:1"><div style="font-size:13px">${mat.nome}</div>${mat.tamanho_kb?`<div style="font-size:11px;color:var(--text3)">${mat.tipo}·${fmtTam(mat.tamanho_kb)}</div>`:''}</div><a href="${mat.url}" target="_blank" class="btn btn-out btn-sm">↓ Baixar</a>${isAdmin?`<button class="btn btn-danger btn-sm" data-del="${mat.id}">✕</button>`:''}`;
+            ml.appendChild(row);
+          });
+          if(isAdmin){
+            const lbl=document.createElement('label'); lbl.className='btn btn-out btn-sm'; lbl.style.cssText='cursor:pointer;margin-top:4px';
+            lbl.innerHTML=`+ Arquivo <input type="file" style="display:none" accept=".pdf,.pptx,.docx,.xlsx,.mp4,.zip" data-encid="${enc.id}">`;
+            ml.appendChild(lbl);
+          }
+          eitem.appendChild(ml);
+        }
+        body.appendChild(eitem);
+        eitem.querySelector('.enc-head').addEventListener('click',()=>{_encAberto=_encAberto===enc.id?null:enc.id;renderView(viewAtual);});
+        if(isAdmin){
+          eitem.querySelectorAll('[data-del]').forEach(btn=>btn.addEventListener('click',async e=>{e.stopPropagation();if(!confirm('Remover?'))return;await sb.from('materiais').delete().eq('id',btn.dataset.del);await carregarDadosPublicos();renderView(viewAtual);}));
+          const inp=eitem.querySelector('input[data-encid]');
+          if(inp) inp.addEventListener('change',async e=>{
+            const file=e.target.files[0]; if(!file)return;
+            const eid=inp.dataset.encid;
+            try{
+              const safeName=sanitizePath(file.name);
+              const path=`enc_${eid}/${Date.now()}_${safeName}`;
+              const {error:ue}=await sb.storage.from('materiais').upload(path,file);
+              if(ue) throw ue;
+              const {data:{publicUrl}}=sb.storage.from('materiais').getPublicUrl(path);
+              const tipo=file.name.split('.').pop().toUpperCase();
+              await sb.from('materiais').insert({encontro_id:eid,nome:file.name,tipo,url:publicUrl,tamanho_kb:Math.round(file.size/1024)});
+              await carregarDadosPublicos(); notif('Material adicionado!'); renderView(viewAtual);
+            }catch(err){notif('Erro no upload: '+err.message,'err');}
+          });
+        }
+      });
+      card.appendChild(body);
+    }
+    card.querySelector('.mod-head').addEventListener('click',()=>{_modAberto=_modAberto===mod.id?null:mod.id;_encAberto=null;renderView(viewAtual);});
+    wrap.appendChild(card);
+  });
   c.appendChild(wrap);
 }
 
 // ─── FREQUÊNCIA PÚBLICA ───
 function renderFreqPublica(c) {
   const wrap=document.createElement('div'); wrap.className='page';
+  wrap.innerHTML = `<div class="page-header"><div><h1>Frequência</h1><p>Presença do grupo em cada encontro</p></div></div>`;
   const real=todosEncontros().filter(e=>e.realizado);
-  wrap.innerHTML=`<div class="stats"><div class="stat"><div class="stat-l">Participantes</div><div class="stat-v">${discipulandos.length}</div></div><div class="stat"><div class="stat-l">Realizados</div><div class="stat-v">${real.length}</div><div class="stat-s">de ${todosEncontros().length}</div></div></div>`;
-  if (!discipulandos.length) {
-    wrap.innerHTML += `<div class="empty"><div class="empty-i">👤</div><p>Nenhum participante cadastrado.</p></div>`;
-    c.appendChild(wrap); return;
-  }
+  const stats=document.createElement('div'); stats.className='stats';
+  stats.innerHTML=`<div class="stat"><div class="stat-l">Participantes</div><div class="stat-v">${discipulandos.length}</div></div><div class="stat"><div class="stat-l">Realizados</div><div class="stat-v">${real.length}</div><div class="stat-s">de ${todosEncontros().length}</div></div>`;
+  wrap.appendChild(stats);
+  const sh=document.createElement('div'); sh.className='sh'; sh.innerHTML=`<span class="sh-t">Por pessoa</span>`; wrap.appendChild(sh);
   const list=document.createElement('div'); list.className='pres-list';
   discipulandos.forEach((d,i)=>{
     const {pct,pres,total}=getFreq(d.id);
@@ -784,7 +800,7 @@ function renderFreqPublica(c) {
   wrap.appendChild(list); c.appendChild(wrap);
 }
 
-// ─── CHAMADA (admin) ───
+// ─── CHAMADA ───
 function carregarChamadaParaEncontro(encId) {
   _chamadaAtual = new Map();
   discipulandos.forEach(d=>{
@@ -792,6 +808,7 @@ function carregarChamadaParaEncontro(encId) {
     _chamadaAtual.set(d.id, reg!==undefined ? reg.presente : true);
   });
 }
+
 function mostrarUnsavedBar() {
   if (el('unsaved-bar')) return;
   const bar=document.createElement('div'); bar.className='unsaved-bar'; bar.id='unsaved-bar';
@@ -803,36 +820,41 @@ function removerUnsavedBar(){ el('unsaved-bar')?.remove(); }
 
 function renderChamada(c) {
   const enc=todosEncontros();
-  if(!_encSel && enc.length>0){_encSel=enc[0].id; carregarChamadaParaEncontro(_encSel);}
+  if(!_encSel&&enc.length>0){_encSel=enc[0].id; carregarChamadaParaEncontro(_encSel);}
   const wrap=document.createElement('div'); wrap.className='page';
-  if(!enc.length){wrap.innerHTML=`<div class="empty"><div class="empty-i">📋</div><p>Nenhum encontro cadastrado.<br>Vá em <b>Conteúdo</b> para criar.</p></div>`;c.appendChild(wrap);return;}
+  wrap.innerHTML = `<div class="page-header"><div><h1>Chamada</h1><p>Marque a presença do encontro selecionado</p></div></div>`;
+  if(!enc.length){
+    const e=document.createElement('div'); e.className='empty'; e.innerHTML=`<div class="empty-i">📋</div><p>Nenhum encontro cadastrado.<br>Vá em <b>Módulos</b> para criar.</p>`;
+    wrap.appendChild(e); c.appendChild(wrap); return;
+  }
 
   const encAtual=enc.find(e=>e.id===_encSel);
-  if (encAtual) el('page-actions').innerHTML = `<span class="badge ${encAtual.realizado?'bg-green':'bg-amber'}">${encAtual.realizado?'✓ Realizado':'Pendente'}</span>`;
-
   const presentes=[..._chamadaAtual.values()].filter(Boolean).length;
   const total=discipulandos.length;
   const pct=total?Math.round(presentes/total*100):0;
-  wrap.innerHTML=`<div class="stats"><div class="stat"><div class="stat-l">Presentes</div><div class="stat-v" id="stat-pres">${presentes}</div><div class="stat-s">de ${total}</div></div><div class="stat"><div class="stat-l">Taxa</div><div class="stat-v" id="stat-pct">${pct}%</div></div></div>`;
 
-  const layout=document.createElement('div'); layout.className='split-layout';
-  const side=document.createElement('div'); side.className='split-side';
-  let sHtml='';
+  const statsHead=document.createElement('div');
+  statsHead.innerHTML=`${encAtual?`<div style="margin-bottom:.75rem"><span class="badge ${encAtual.realizado?'bg-green':'bg-amber'}">${encAtual.realizado?'✓ Realizado':'Pendente'}</span></div>`:''}<div class="stats"><div class="stat"><div class="stat-l">Presentes</div><div class="stat-v" id="stat-pres">${presentes}</div><div class="stat-s">de ${total}</div></div><div class="stat"><div class="stat-l">Taxa</div><div class="stat-v" id="stat-pct">${pct}%</div></div></div>`;
+  wrap.appendChild(statsHead);
+
+  const layout=document.createElement('div'); layout.className='chamada-layout';
+
+  const sidebar=document.createElement('div'); sidebar.className='chamada-sidebar';
+  let sHtml=`<div style="font-size:12px;font-weight:500;color:var(--text2);margin-bottom:.5rem">Selecionar encontro</div>`;
   modulos.forEach(mod=>{
-    if(!mod.encontros.length) return;
-    sHtml+=`<div class="split-side-label">${mod.numero}. ${mod.titulo}</div>`;
+    sHtml+=`<div class="enc-sel-group-label">${mod.numero}. ${mod.titulo}</div>`;
     mod.encontros.forEach(e=>{
       const isActive=e.id===_encSel;
       const semChamada=!encontroTemChamada(e.id)&&!e.realizado;
-      sHtml+=`<button class="lesson-list-btn${isActive?' active':''}${e.realizado?' done':''}" data-encid="${e.id}"><span class="lesson-status">${e.realizado?'✓':e.numero}</span><span style="flex:1">${e.titulo}${e.data?`<div style="font-size:10px;opacity:.6">${fmtData(e.data)}</div>`:''}</span>${semChamada?`<span style="font-size:10px;color:var(--amber)" title="Sem chamada registrada">!</span>`:''}</button>`;
+      sHtml+=`<button class="enc-sel-btn${isActive?' active':''}${semChamada?' enc-no-chamada':''}" data-encid="${e.id}"><div class="enc-sel-n">${e.numero}</div><div style="flex:1;text-align:left"><div>${e.titulo}</div>${e.data?`<div style="font-size:10px;opacity:.6">${fmtData(e.data)}</div>`:''}</div>${e.realizado?`<span style="font-size:10px;color:var(--green)">✓</span>`:(semChamada?`<span style="font-size:10px;color:var(--amber)" title="Sem chamada">!</span>`:'')}</button>`;
     });
   });
-  side.innerHTML=sHtml;
-  side.querySelectorAll('[data-encid]').forEach(btn=>btn.addEventListener('click',async ()=>{
-    if(_chamadaSuja){const ok=await confirmDialog('Chamada não salva. Trocar mesmo assim?');if(!ok)return;_chamadaSuja=false;removerUnsavedBar();}
+  sidebar.innerHTML=sHtml;
+  sidebar.querySelectorAll('[data-encid]').forEach(btn=>btn.addEventListener('click',()=>{
+    if(_chamadaSuja){if(!confirm('Chamada não salva. Trocar mesmo assim?')){return;} _chamadaSuja=false; removerUnsavedBar();}
     _encSel=btn.dataset.encid; carregarChamadaParaEncontro(_encSel); renderView('chamada');
   }));
-  layout.appendChild(side);
+  layout.appendChild(sidebar);
 
   const main=document.createElement('div');
   if(!encAtual){main.innerHTML=`<div class="empty"><div class="empty-i">←</div><p>Selecione um encontro.</p></div>`;}
@@ -850,7 +872,7 @@ function renderChamada(c) {
         _chamadaAtual.set(d.id,novo);
         this.className=`tog ${novo?'tog-p':'tog-a'}`; this.textContent=novo?'Presente':'Ausente';
         const p=[..._chamadaAtual.values()].filter(Boolean).length;
-        el('stat-pres').textContent=p; el('stat-pct').textContent=(discipulandos.length?Math.round(p/discipulandos.length*100):0)+'%';
+        el('stat-pres').textContent=p; el('stat-pct').textContent=Math.round(p/discipulandos.length*100)+'%';
         _chamadaSuja=true; mostrarUnsavedBar();
       });
       list.appendChild(row);
@@ -867,100 +889,41 @@ function renderChamada(c) {
         const encRef=enc.find(e=>e.id===_encSel);
         if(encRef&&!encRef.realizado) await sb.from('encontros').update({realizado:true}).eq('id',_encSel);
         await carregarDadosPublicos(); _chamadaSuja=false; removerUnsavedBar();
-        notif('Chamada salva!');
-        renderView('chamada');
+        notif('Chamada salva!'); btn.textContent='✓ Salvar chamada'; btn.disabled=false;
       }catch(e){notif('Erro: '+e.message,'err'); btn.textContent='✓ Salvar chamada'; btn.disabled=false;}
     });
   }
   layout.appendChild(main); wrap.appendChild(layout); c.appendChild(wrap);
 }
 
-// ─── CONTEÚDO (admin) — módulos, encontros e materiais unificados ───
-function renderConteudoAdm(c) {
-  el('page-actions').innerHTML = `<button class="btn btn-acc btn-sm" id="btn-novo-mod">+ Novo módulo</button>`;
-  el('btn-novo-mod').addEventListener('click',()=>abrirModalMod(null));
-
+// ─── ESTRUTURA (módulos/encontros - admin) ───
+function renderEstrutura(c) {
   const wrap=document.createElement('div'); wrap.className='page';
-  if(!modulos.length){wrap.innerHTML=`<div class="empty"><div class="empty-i">📦</div><p>Nenhum módulo criado ainda.<br>Clique em <b>+ Novo módulo</b> para começar.</p></div>`;c.appendChild(wrap);return;}
-
+  wrap.innerHTML = `<div class="page-header"><div><h1>Módulos</h1><p>Organize o currículo em módulos e encontros</p></div><button class="btn btn-acc btn-sm" id="btn-novo-mod">+ Novo módulo</button></div>`;
+  if(!modulos.length){const e=document.createElement('div');e.className='empty';e.innerHTML=`<div class="empty-i">📦</div><p>Nenhum módulo criado.<br>Clique em <b>+ Novo módulo</b>.</p>`;wrap.appendChild(e);}
   modulos.forEach(mod=>{
-    const card=document.createElement('div'); card.className='adm-mod-card'; const open=_conteudoMod===mod.id;
-    card.innerHTML=`<div class="adm-mod-head"><div style="width:28px;height:28px;border-radius:6px;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;flex-shrink:0">${mod.numero}</div><span class="adm-mod-title">${mod.titulo}</span><span class="badge bg-gray">${mod.encontros.length} encontro(s)</span><div class="adm-actions" onclick="event.stopPropagation()"><button class="btn btn-out btn-sm btn-edit-mod">✏️</button><button class="btn btn-danger btn-sm btn-del-mod">🗑</button></div><span style="font-size:12px;color:var(--accent);margin-left:4px">${open?'▲':'▼'}</span></div>`;
+    const card=document.createElement('div'); card.className='adm-mod-card'; const open=_estrutMod===mod.id;
+    card.innerHTML=`<div class="adm-mod-head"><div style="width:28px;height:28px;border-radius:6px;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;flex-shrink:0">${mod.numero}</div><span class="adm-mod-title">${mod.titulo}</span><div class="adm-actions" onclick="event.stopPropagation()"><button class="btn btn-out btn-sm btn-edit-mod">✏️</button><button class="btn btn-danger btn-sm btn-del-mod">🗑</button></div><span style="font-size:12px;color:var(--accent);margin-left:4px">${open?'▲':'▼'}</span></div>`;
     if(open){
       const body=document.createElement('div');
       if(!mod.encontros.length){const ne=document.createElement('div');ne.style.cssText='padding:.75rem 1.25rem;font-size:13px;color:var(--text3)';ne.textContent='Nenhum encontro ainda.';body.appendChild(ne);}
       mod.encontros.forEach(enc=>{
-        const encOpen=_conteudoEnc===enc.id;
-        const item=document.createElement('div'); item.className='enc-item';
-        const head=document.createElement('div'); head.className='adm-enc-row'; head.style.cursor='pointer';
-        head.innerHTML=`<div style="width:24px;height:24px;border-radius:5px;background:var(--muted);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:var(--text2)">${enc.numero}</div><span class="adm-enc-name">${enc.titulo}</span>${enc.data?`<span style="font-size:11px;color:var(--text3)">${fmtData(enc.data)}</span>`:''}<span class="badge ${enc.realizado?'bg-green':'bg-gray'}">${enc.realizado?'Realizado':'Agendado'}</span><span class="badge bg-acc">${enc.materiais.length} arq.</span><div class="adm-actions" onclick="event.stopPropagation()"><button class="btn btn-out btn-sm btn-edit-enc">✏️</button><button class="btn btn-danger btn-sm btn-del-enc">🗑</button></div><span style="font-size:11px;color:var(--text3)">${encOpen?'▲':'▼'}</span>`;
-        head.addEventListener('click',()=>{_conteudoEnc=_conteudoEnc===enc.id?null:enc.id;renderView('conteudo');});
-        head.querySelector('.btn-edit-enc').addEventListener('click',e=>{e.stopPropagation();abrirModalEnc(enc,mod.id,enc.numero);});
-        head.querySelector('.btn-del-enc').addEventListener('click',async e=>{
-          e.stopPropagation();
-          const ok=await confirmDialog('Excluir este encontro? Isso também remove os materiais e chamadas associadas.',{danger:true}); if(!ok)return;
-          await sb.from('encontros').delete().eq('id',enc.id);
-          await carregarDadosPublicos(); notif('Encontro excluído.'); renderView('conteudo');
-        });
-        item.appendChild(head);
-        if(encOpen){
-          const inner=document.createElement('div'); inner.className='enc-body-inner';
-          if(enc.tema||enc.versiculo||enc.tarefa){
-            const info=document.createElement('div'); info.style.cssText='background:var(--al);border-radius:var(--rs);padding:.6rem .9rem;margin-bottom:.6rem;font-size:12px;line-height:1.6';
-            if(enc.tema) info.innerHTML+=`<div>📖 <b>Tema:</b> ${enc.tema}</div>`;
-            if(enc.versiculo) info.innerHTML+=`<div>✝ <b>Versículo:</b> <em>${enc.versiculo}</em></div>`;
-            if(enc.tarefa) info.innerHTML+=`<div>✏️ <b>Tarefa:</b> ${enc.tarefa}</div>`;
-            inner.appendChild(info);
-          }
-          const ml=document.createElement('div'); ml.className='mat-list';
-          if(!enc.materiais.length) ml.innerHTML=`<p style="font-size:12px;color:var(--text3);margin-bottom:.4rem">Nenhum material anexado.</p>`;
-          enc.materiais.forEach(mat=>{
-            const ico=mat.tipo==='PDF'?'📄':mat.tipo==='PPTX'?'📊':mat.tipo==='VIDEO'?'🎬':'📎';
-            const row=document.createElement('div'); row.className='mat-row';
-            row.innerHTML=`<span style="font-size:15px">${ico}</span><div style="flex:1"><div style="font-size:13px">${mat.nome}</div>${mat.tamanho_kb?`<div style="font-size:11px;color:var(--text3)">${mat.tipo}·${fmtTam(mat.tamanho_kb)}</div>`:''}</div><a href="${mat.url}" target="_blank" class="btn btn-out btn-sm">↓</a><button class="btn btn-danger btn-sm" data-delmat="${mat.id}">✕</button>`;
-            row.querySelector('[data-delmat]').addEventListener('click',async()=>{
-              const ok=await confirmDialog('Remover este material?',{danger:true}); if(!ok)return;
-              await sb.from('materiais').delete().eq('id',mat.id);
-              await carregarDadosPublicos(); notif('Material removido.'); renderView('conteudo');
-            });
-            ml.appendChild(row);
-          });
-          inner.appendChild(ml);
-          const lbl=document.createElement('label'); lbl.className='btn btn-out btn-sm'; lbl.style.cssText='cursor:pointer;margin-top:8px;display:inline-flex';
-          lbl.innerHTML=`+ Arquivo <input type="file" style="display:none" accept=".pdf,.pptx,.docx,.xlsx,.mp4,.zip">`;
-          const inp=lbl.querySelector('input');
-          inp.addEventListener('change',async e=>{
-            const file=e.target.files[0]; if(!file)return;
-            try{
-              const safeName=sanitizePath(file.name);
-              const path=`enc_${enc.id}/${Date.now()}_${safeName}`;
-              const {error:ue}=await sb.storage.from('materiais').upload(path,file);
-              if(ue) throw ue;
-              const {data:{publicUrl}}=sb.storage.from('materiais').getPublicUrl(path);
-              const tipo=file.name.split('.').pop().toUpperCase();
-              await sb.from('materiais').insert({encontro_id:enc.id,nome:file.name,tipo,url:publicUrl,tamanho_kb:Math.round(file.size/1024)});
-              await carregarDadosPublicos(); notif('Material adicionado!'); renderView('conteudo');
-            }catch(err){notif('Erro no upload: '+err.message,'err');}
-          });
-          inner.appendChild(lbl);
-          item.appendChild(inner);
-        }
-        body.appendChild(item);
+        const row=document.createElement('div'); row.className='adm-enc-row';
+        row.innerHTML=`<div style="width:24px;height:24px;border-radius:5px;background:var(--muted);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:var(--text2)">${enc.numero}</div><span class="adm-enc-name">${enc.titulo}</span>${enc.data?`<span style="font-size:11px;color:var(--text3)">${fmtData(enc.data)}</span>`:''}<span class="badge ${enc.realizado?'bg-green':'bg-gray'}">${enc.realizado?'Realizado':'Agendado'}</span><div class="adm-actions"><button class="btn btn-out btn-sm btn-edit-enc" data-eid="${enc.id}">✏️</button><button class="btn btn-danger btn-sm btn-del-enc" data-eid="${enc.id}">🗑</button></div>`;
+        body.appendChild(row);
       });
       const addEnc=document.createElement('div'); addEnc.className='adm-add-enc'; addEnc.innerHTML=`<button class="btn btn-out btn-sm btn-add-enc">+ Novo encontro</button>`; body.appendChild(addEnc); card.appendChild(body);
       card.querySelector('.btn-add-enc').addEventListener('click',e=>{e.stopPropagation();abrirModalEnc(null,mod.id,mod.encontros.length+1);});
+      card.querySelectorAll('.btn-edit-enc').forEach(btn=>btn.addEventListener('click',e=>{e.stopPropagation();const enc=mod.encontros.find(en=>en.id===btn.dataset.eid);abrirModalEnc(enc,mod.id,enc?.numero);}));
+      card.querySelectorAll('.btn-del-enc').forEach(btn=>btn.addEventListener('click',async e=>{e.stopPropagation();if(!confirm('Excluir encontro?'))return;await sb.from('encontros').delete().eq('id',btn.dataset.eid);await carregarDadosPublicos();notif('Encontro excluído.');renderView('estrutura');}));
     }
-    card.querySelector('.adm-mod-head').addEventListener('click',()=>{_conteudoMod=_conteudoMod===mod.id?null:mod.id;_conteudoEnc=null;renderView('conteudo');});
+    card.querySelector('.adm-mod-head').addEventListener('click',()=>{_estrutMod=_estrutMod===mod.id?null:mod.id;renderView('estrutura');});
     card.querySelector('.btn-edit-mod').addEventListener('click',e=>{e.stopPropagation();abrirModalMod(mod);});
-    card.querySelector('.btn-del-mod').addEventListener('click',async e=>{
-      e.stopPropagation();
-      const ok=await confirmDialog(`Excluir o módulo "${mod.titulo}"? Isso remove também todos os encontros e materiais dele.`,{danger:true}); if(!ok)return;
-      await sb.from('modulos').delete().eq('id',mod.id);
-      await carregarDadosPublicos(); notif('Módulo excluído.'); renderView('conteudo');
-    });
+    card.querySelector('.btn-del-mod').addEventListener('click',async e=>{e.stopPropagation();if(!confirm(`Excluir módulo "${mod.titulo}"?`))return;await sb.from('modulos').delete().eq('id',mod.id);await carregarDadosPublicos();notif('Módulo excluído.');renderView('estrutura');});
     wrap.appendChild(card);
   });
   c.appendChild(wrap);
+  el('btn-novo-mod').addEventListener('click',()=>abrirModalMod(null));
 }
 
 function abrirModalMod(mod) {
@@ -983,8 +946,8 @@ function abrirModalMod(mod) {
     if(!titulo){ow.querySelector('#m-err').textContent='Informe o título.';ow.querySelector('#m-err').classList.remove('hide');return;}
     ow.querySelector('#m-save').textContent='Salvando...';
     if(isEdit){await sb.from('modulos').update({numero,titulo,descricao}).eq('id',mod.id);}
-    else{const{data}=await sb.from('modulos').insert({numero,titulo,descricao,grupo_id:grupoAtual?.id}).select().single();if(data)_conteudoMod=data.id;}
-    ow.remove(); await carregarDadosPublicos(); notif(isEdit?'Módulo atualizado!':'Módulo criado!'); renderView('conteudo');
+    else{const{data}=await sb.from('modulos').insert({numero,titulo,descricao,grupo_id:grupoAtual?.id}).select().single();if(data)_estrutMod=data.id;}
+    ow.remove(); await carregarDadosPublicos(); notif(isEdit?'Módulo atualizado!':'Módulo criado!'); renderView('estrutura');
   };
 }
 
@@ -1015,21 +978,19 @@ function abrirModalEnc(enc, modId, nextNum) {
     ow.querySelector('#e-save').textContent='Salvando...';
     if(isEdit){await sb.from('encontros').update(payload).eq('id',enc.id);}
     else{await sb.from('encontros').insert({...payload,modulo_id:modId,realizado:false});}
-    ow.remove(); await carregarDadosPublicos(); notif(isEdit?'Encontro atualizado!':'Encontro criado!'); renderView('conteudo');
+    ow.remove(); await carregarDadosPublicos(); notif(isEdit?'Encontro atualizado!':'Encontro criado!'); renderView('estrutura');
   };
 }
 
 // ─── DISCIPULANDOS ───
 function renderDiscipulandos(c) {
-  el('page-actions').innerHTML = `<button class="btn btn-acc btn-sm" id="btn-add-disc">+ Adicionar</button>`;
-  el('btn-add-disc').addEventListener('click',()=>abrirModalDisc());
-
   const wrap=document.createElement('div'); wrap.className='page';
+  wrap.innerHTML = `<div class="page-header"><div><h1>Discipulandos</h1><p>${discipulandos.length} participante(s) ativo(s)</p></div><button class="btn btn-acc btn-sm" id="btn-add-disc">+ Adicionar</button></div>`;
   const box=document.createElement('div'); box.className='box'; box.style.cssText='padding:0;overflow:hidden';
   const tbl=document.createElement('table'); tbl.className='dt';
   tbl.innerHTML=`<thead><tr><th>Nome</th><th>Situação</th><th>Frequência</th><th>Contato</th></tr></thead>`;
   const tbody=document.createElement('tbody');
-  if(!discipulandos.length) tbody.innerHTML=`<tr><td colspan="4" style="text-align:center;color:var(--text3);padding:2rem">Nenhum discipulando cadastrado.</td></tr>`;
+  if(!discipulandos.length) tbody.innerHTML=`<tr><td colspan="4" style="text-align:center;color:var(--text3);padding:2rem">Nenhum discipulando.</td></tr>`;
   discipulandos.forEach((d,i)=>{
     const {pct}=getFreq(d.id);
     const sit=SITUACOES[d.situacao||'ativo'];
@@ -1039,6 +1000,7 @@ function renderDiscipulandos(c) {
     tbody.appendChild(tr);
   });
   tbl.appendChild(tbody); box.appendChild(tbl); wrap.appendChild(box); c.appendChild(wrap);
+  el('btn-add-disc').addEventListener('click',()=>abrirModalDisc());
 }
 
 function abrirPerfilDisc(d, idx) {
@@ -1069,7 +1031,7 @@ function abrirPerfilDisc(d, idx) {
   ow.addEventListener('click',e=>e.target===ow&&ow.remove());
   ow.querySelector('#p-cancel').onclick=()=>ow.remove();
   ow.querySelector('#p-arch').onclick=async()=>{
-    const ok=await confirmDialog(`Arquivar ${d.nome}? Ela/ele não aparecerá mais nas listas.`,{danger:true}); if(!ok)return;
+    if(!confirm(`Arquivar ${d.nome}? Ela/ele não aparecerá mais nas listas.`))return;
     await sb.from('discipulandos').update({ativo:false}).eq('id',d.id);
     ow.remove(); await carregarDadosPublicos(); notif('Discipulando arquivado.'); renderView('discipulandos');
   };
@@ -1109,11 +1071,9 @@ function abrirModalDisc(disc=null) {
 
 // ─── ORAÇÕES (admin) ───
 function renderOracoesAdm(c) {
-  el('page-actions').innerHTML = `<button class="btn btn-acc btn-sm" id="btn-novo-or">+ Novo pedido</button>`;
-  el('btn-novo-or').addEventListener('click',()=>abrirModalOracao());
-
   const wrap=document.createElement('div'); wrap.className='page';
-  if(!oracoes.length){wrap.innerHTML=`<div class="empty"><div class="empty-i">🙏</div><p>Nenhum pedido cadastrado.</p></div>`;c.appendChild(wrap);return;}
+  wrap.innerHTML = `<div class="page-header"><div><h1>Pedidos de Oração</h1><p>Acompanhe e responda os pedidos do grupo</p></div><button class="btn btn-acc btn-sm" id="btn-add-or">+ Novo pedido</button></div>`;
+  if(!oracoes.length){wrap.innerHTML+=`<div class="empty"><div class="empty-i">🙏</div><p>Nenhum pedido cadastrado.</p></div>`;}
   const pendentes=oracoes.filter(o=>!o.respondido);
   const respondidos=oracoes.filter(o=>o.respondido);
   if(pendentes.length){
@@ -1122,8 +1082,9 @@ function renderOracoesAdm(c) {
     pendentes.forEach(o=>{
       const row=document.createElement('div'); row.className='oracao-row';
       row.innerHTML=`<div class="oracao-check" id="chk-${o.id}">—</div><div style="flex:1"><div class="oracao-txt">${o.pedido}</div><div style="font-size:11px;color:var(--text3);margin-top:2px">${new Date(o.criado_em).toLocaleDateString('pt-BR')}</div></div><button class="btn btn-danger btn-sm" data-del="${o.id}">✕</button>`;
-      row.querySelector(`#chk-${o.id}`).addEventListener('click',async()=>{await sb.from('oracoes').update({respondido:true}).eq('id',o.id);await carregarDadosPublicos();notif('Marcado como respondido! 🙌');renderView('oracoes-adm');});
-      row.querySelector('[data-del]').addEventListener('click',async()=>{const ok=await confirmDialog('Excluir pedido?',{danger:true});if(!ok)return;await sb.from('oracoes').delete().eq('id',o.id);await carregarDadosPublicos();renderView('oracoes-adm');});
+      const chk=row.querySelector(`#chk-${o.id}`);
+      chk.addEventListener('click',async()=>{await sb.from('oracoes').update({respondido:true}).eq('id',o.id);await carregarDadosPublicos();notif('Marcado como respondido! 🙌');renderView('oracoes-adm');});
+      row.querySelector('[data-del]').addEventListener('click',async()=>{if(!confirm('Excluir pedido?'))return;await sb.from('oracoes').delete().eq('id',o.id);await carregarDadosPublicos();renderView('oracoes-adm');});
       box.appendChild(row);
     });
     wrap.appendChild(box);
@@ -1134,12 +1095,13 @@ function renderOracoesAdm(c) {
     respondidos.slice(0,10).forEach(o=>{
       const row=document.createElement('div'); row.className='oracao-row';
       row.innerHTML=`<div class="oracao-check done">✓</div><div style="flex:1"><div class="oracao-txt done-txt">${o.pedido}</div></div><button class="btn btn-danger btn-sm" data-del="${o.id}">✕</button>`;
-      row.querySelector('[data-del]').addEventListener('click',async()=>{const ok=await confirmDialog('Excluir?',{danger:true});if(!ok)return;await sb.from('oracoes').delete().eq('id',o.id);await carregarDadosPublicos();renderView('oracoes-adm');});
+      row.querySelector('[data-del]').addEventListener('click',async()=>{if(!confirm('Excluir?'))return;await sb.from('oracoes').delete().eq('id',o.id);await carregarDadosPublicos();renderView('oracoes-adm');});
       box.appendChild(row);
     });
     wrap.appendChild(box);
   }
   c.appendChild(wrap);
+  el('btn-add-or').addEventListener('click',()=>abrirModalOracao());
 }
 
 function abrirModalOracao() {
@@ -1163,19 +1125,18 @@ function abrirModalOracao() {
 
 // ─── AVISOS (admin) ───
 function renderAvisosAdm(c) {
-  el('page-actions').innerHTML = `<button class="btn btn-acc btn-sm" id="btn-novo-av">+ Novo aviso</button>`;
-  el('btn-novo-av').addEventListener('click',()=>abrirModalAviso(null));
-
   const wrap=document.createElement('div'); wrap.className='page';
-  if(!avisos.length){wrap.innerHTML=`<div class="empty"><div class="empty-i">📢</div><p>Nenhum aviso publicado.</p></div>`;}
+  wrap.innerHTML = `<div class="page-header"><div><h1>Avisos</h1><p>Publique o próximo encontro e recados para o grupo</p></div><button class="btn btn-acc btn-sm" id="btn-add-av">+ Novo aviso</button></div>`;
+  if(!avisos.length){wrap.innerHTML+=`<div class="empty"><div class="empty-i">📢</div><p>Nenhum aviso publicado.</p></div>`;}
   avisos.forEach(a=>{
     const card=document.createElement('div'); card.className='box'; card.style.marginBottom='10px';
-    card.innerHTML=`<div class="sh" style="margin-bottom:.5rem"><span style="font-size:14px;font-weight:500">${a.titulo}</span><div class="gap"><span class="badge ${a.ativo?'bg-green':'bg-gray'}">${a.ativo?'Ativo':'Inativo'}</span><button class="btn btn-out btn-sm btn-edit-av">✏️ Editar</button><button class="btn btn-danger btn-sm btn-del-av">🗑</button></div></div>${a.data_encontro?`<div style="font-size:13px;color:var(--text2)">📅 ${fmtData(a.data_encontro)}</div>`:''} ${a.local?`<div style="font-size:13px;color:var(--text2)">📍 ${a.local}</div>`:''} ${a.tema?`<div style="font-size:13px;color:var(--text2)">📖 ${a.tema}</div>`:''}`;
+    card.innerHTML=`<div class="sh" style="margin-bottom:.5rem"><span style="font-size:14px;font-weight:500">${a.titulo}</span><div class="gap"><span class="badge ${a.ativo?'bg-green':'bg-gray'}">${a.ativo?'Ativo':'Inativo'}</span><button class="btn btn-out btn-sm btn-edit-av" data-id="${a.id}">✏️ Editar</button><button class="btn btn-danger btn-sm btn-del-av" data-id="${a.id}">🗑</button></div></div>${a.data_encontro?`<div style="font-size:13px;color:var(--text2)">📅 ${fmtData(a.data_encontro)}</div>`:''} ${a.local?`<div style="font-size:13px;color:var(--text2)">📍 ${a.local}</div>`:''} ${a.tema?`<div style="font-size:13px;color:var(--text2)">📖 ${a.tema}</div>`:''}`;
     card.querySelector('.btn-edit-av').addEventListener('click',()=>abrirModalAviso(a));
-    card.querySelector('.btn-del-av').addEventListener('click',async()=>{const ok=await confirmDialog('Excluir aviso?',{danger:true});if(!ok)return;await sb.from('avisos').delete().eq('id',a.id);await carregarDadosPublicos();renderView('avisos-adm');});
+    card.querySelector('.btn-del-av').addEventListener('click',async()=>{if(!confirm('Excluir aviso?'))return;await sb.from('avisos').delete().eq('id',a.id);await carregarDadosPublicos();renderView('avisos-adm');});
     wrap.appendChild(card);
   });
   c.appendChild(wrap);
+  el('btn-add-av').addEventListener('click',()=>abrirModalAviso(null));
 }
 
 function abrirModalAviso(av) {
@@ -1212,16 +1173,27 @@ function abrirModalAviso(av) {
 // ─── RELATÓRIOS ───
 function renderRelatorios(c) {
   const wrap=document.createElement('div'); wrap.className='page';
-  wrap.innerHTML=`<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px;margin-bottom:1.5rem">
+  wrap.innerHTML = `<div class="page-header"><div><h1>Relatórios</h1><p>Exporte dados e acompanhe a evolução do grupo</p></div></div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px;margin-bottom:1.5rem">
       <div class="box" style="display:flex;flex-direction:column;gap:.5rem"><div><div style="font-size:14px;font-weight:500">Frequência geral</div><div style="font-size:12px;color:var(--text2)">Presenças, faltas e percentual por pessoa.</div></div><button class="btn btn-acc btn-sm" id="btn-exp-freq" style="align-self:flex-start">↓ Baixar .xlsx</button></div>
       <div class="box" style="display:flex;flex-direction:column;gap:.5rem"><div><div style="font-size:14px;font-weight:500">Relatório completo</div><div style="font-size:12px;color:var(--text2)">3 abas: chamada, materiais e resumo.</div></div><button class="btn btn-acc btn-sm" id="btn-exp-full" style="align-self:flex-start">↓ Baixar .xlsx</button></div>
     </div>`;
 
-  const enc=todosEncontros().filter(e=>e.realizado);
-  if(enc.length){
+  const enc = todosEncontros().filter(e=>e.realizado);
+  if (enc.length) {
     const chartWrap=document.createElement('div'); chartWrap.className='box'; chartWrap.style.marginBottom='1.25rem';
-    chartWrap.innerHTML=`<div class="sh-t" style="font-size:14px;margin-bottom:.75rem">Presença por encontro</div><div class="chart-wrap"></div>`;
-    const chart=chartWrap.querySelector('.chart-wrap');
+    chartWrap.innerHTML=`<div class="sh-t" style="font-size:14px;margin-bottom:.5rem">Presença por encontro</div><div class="chart-wrap" id="chart-enc"></div>`;
+    wrap.appendChild(chartWrap);
+  }
+
+  const barsWrap=document.createElement('div'); barsWrap.className='box';
+  barsWrap.innerHTML=`<div class="sh-t" style="font-size:14px;margin-bottom:.75rem">Frequência por pessoa</div><div id="freq-bars"></div><p style="font-size:11px;color:var(--text3);margin-top:.5rem">Verde ≥75% · Âmbar ≥50% · Vermelho &lt;50% · ${enc.length} encontro(s) realizado(s)</p>`;
+  wrap.appendChild(barsWrap);
+
+  c.appendChild(wrap);
+
+  if (enc.length) {
+    const chart = el('chart-enc');
     enc.forEach(e=>{
       const total=discipulandos.length||1;
       const pres=chamadas.filter(ch=>ch.encontro_id===e.id&&ch.presente).length;
@@ -1231,29 +1203,20 @@ function renderRelatorios(c) {
       col.innerHTML=`<div style="font-size:9px;color:var(--text2);margin-bottom:2px">${pct}%</div><div class="chart-bar" style="height:${Math.max(pct,4)}px;background:${cor};width:100%"></div><div class="chart-label">E${e.numero}</div>`;
       chart.appendChild(col);
     });
-    wrap.appendChild(chartWrap);
   }
 
-  const barsWrap=document.createElement('div'); barsWrap.className='box';
-  barsWrap.innerHTML=`<div class="sh-t" style="font-size:14px;margin-bottom:.75rem">Por pessoa</div>`;
-  const barsHolder=document.createElement('div');
+  const bars = el('freq-bars');
   discipulandos.forEach(d=>{
     const{pct}=getFreq(d.id);
     const cor=pct>=75?'var(--green)':pct>=50?'var(--amber)':'var(--red)';
     const row=document.createElement('div'); row.className='fb-row';
     row.innerHTML=`<span class="fb-name">${d.nome.split(' ')[0]}</span><div class="fb-track"><div class="fb-fill" style="width:0%;background:${cor}" data-w="${pct}"></div></div><span class="fb-pct">${pct}%</span>`;
-    barsHolder.appendChild(row);
+    bars.appendChild(row);
   });
-  barsWrap.appendChild(barsHolder);
-  if(!discipulandos.length){ barsWrap.innerHTML += `<p style="font-size:12.5px;color:var(--text3)">Nenhum discipulando cadastrado.</p>`; }
-  barsWrap.innerHTML += `<p style="font-size:11px;color:var(--text3);margin-top:.5rem">Verde ≥75% · Âmbar ≥50% · Vermelho &lt;50% · ${enc.length} encontro(s) realizado(s)</p>`;
-  wrap.appendChild(barsWrap);
-  c.appendChild(wrap);
+  requestAnimationFrame(()=>document.querySelectorAll('.fb-fill[data-w]').forEach(elx=>{ elx.style.width=elx.dataset.w+'%'; }));
 
-  requestAnimationFrame(()=>barsWrap.querySelectorAll('.fb-fill[data-w]').forEach(x=>{ x.style.width=x.dataset.w+'%'; }));
-
-  el('btn-exp-freq').addEventListener('click',exportFreq);
-  el('btn-exp-full').addEventListener('click',exportFull);
+  el('btn-exp-freq')?.addEventListener('click',exportFreq);
+  el('btn-exp-full')?.addEventListener('click',exportFull);
 }
 
 function exportFreq(){
